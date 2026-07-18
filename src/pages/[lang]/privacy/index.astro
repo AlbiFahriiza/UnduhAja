@@ -1,0 +1,224 @@
+---
+export const prerender = true;
+
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Header from '@/components/astro/Header.astro';
+import Footer from '@/components/astro/Footer.astro';
+import { type Lang, createTranslator } from '@/i18n/utils';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'id' } },
+    { params: { lang: 'en' } },
+  ];
+}
+
+const { lang } = Astro.params as { lang: Lang };
+const t = createTranslator(lang);
+const isID = lang === 'id';
+
+const lastUpdated = '17 Juli 2025';
+---
+
+<BaseLayout
+  title={`${t('pages.privacy.title')} — UnduhAja`}
+  description={t('pages.privacy.subtitle')}
+  lang={lang}
+>
+  <Header lang={lang} />
+
+  <main>
+    <section class="page-header">
+      <div class="container">
+        <h1>{t('pages.privacy.title')}</h1>
+        <p class="subtitle">{t('pages.privacy.subtitle')}</p>
+        <p class="updated">{isID ? 'Terakhir diperbarui:' : 'Last updated:'} {lastUpdated}</p>
+      </div>
+    </section>
+
+    <section class="page-content">
+      <div class="container container-narrow">
+        <div class="prose">
+          <h2>{isID ? '1. Ringkasan Eksekutif' : '1. Executive Summary'}</h2>
+          <p>
+            {isID
+              ? 'UnduhAja dibangun dengan filosofi privacy-first. Kami tidak menyimpan riwayat unduhan Anda, tidak menggunakan cookie tracking, tidak menggunakan analytics pihak ketiga, dan tidak menjual data ke siapapun. Dokumen ini menjelaskan secara detail bagaimana data Anda (atau ketiadaannya) ditangani.'
+              : 'UnduhAja is built with a privacy-first philosophy. We do not store your download history, do not use tracking cookies, do not use third-party analytics, and do not sell data to anyone. This document details how your data (or lack thereof) is handled.'}
+          </p>
+
+          <h2>{isID ? '2. Data yang Kami Kumpulkan' : '2. Data We Collect'}</h2>
+          <h3>{isID ? '2.1 Data yang Anda Berikan Secara Sukarela' : '2.1 Data You Voluntarily Provide'}</h3>
+          <p>
+            {isID
+              ? 'Jika Anda membuat akun, kami mengumpulkan alamat email yang Anda berikan saat mendaftar. Email ini digunakan untuk: (a) autentikasi, (b) reset password, (c) komunikasi penting terkait akun. Kami tidak mengirim newsletter atau email marketing tanpa persetujuan eksplisit Anda.'
+              : 'If you create an account, we collect the email address you provide during registration. This email is used for: (a) authentication, (b) password reset, (c) important account-related communications. We do not send newsletters or marketing emails without your explicit consent.'}
+          </p>
+          <h3>{isID ? '2.2 Data yang Dikumpulkan Secara Otomatis' : '2.2 Automatically Collected Data'}</h3>
+          <p>
+            {isID
+              ? 'Saat Anda menggunakan UnduhAja, kami sementara memproses URL video yang Anda tempelkan untuk mengambil metadata dan men-stream file ke browser Anda. URL ini disimpan dalam memory server selama proses berlangsung (biasanya 5-30 detik) dan langsung dihapus setelah selesai. Kami tidak menulis URL ke disk, tidak ke log, tidak ke database.'
+              : 'When you use UnduhAja, we temporarily process the video URL you paste to retrieve metadata and stream the file to your browser. This URL is stored in server memory during the process (typically 5-30 seconds) and immediately deleted after completion. We do not write URLs to disk, logs, or database.'}
+          </p>
+          <h3>{isID ? '2.3 Data Teknis' : '2.3 Technical Data'}</h3>
+          <p>
+            {isID
+              ? 'Kami memproses alamat IP Anda secara sementara untuk rate limiting (mencegah penyalahgunaan). IP disimpan dalam Redis cache dengan TTL 1 jam, lalu otomatis dihapus. Kami tidak mengaitkan IP dengan akun pengguna atau URL yang diunduh.'
+              : 'We process your IP address temporarily for rate limiting (preventing abuse). IPs are stored in Redis cache with a 1-hour TTL, then automatically deleted. We do not associate IPs with user accounts or downloaded URLs.'}
+          </p>
+
+          <h2>{isID ? '3. Data yang TIDAK Kami Kumpulkan' : '3. Data We Do NOT Collect'}</h2>
+          <ul>
+            <li>{isID ? 'Tidak ada cookie tracking atau advertising' : 'No tracking or advertising cookies'}</li>
+            <li>{isID ? 'Tidak ada Google Analytics, Facebook Pixel, atau analytics pihak ketiga' : 'No Google Analytics, Facebook Pixel, or third-party analytics'}</li>
+            <li>{isID ? 'Tidak ada riwayat unduhan (download history)' : 'No download history'}</li>
+            <li>{isID ? 'Tidak ada log URL yang Anda proses' : 'No logs of URLs you process'}</li>
+            <li>{isID ? 'Tidak ada fingerprint browser' : 'No browser fingerprinting'}</li>
+            <li>{isID ? 'Tidak ada pelacakan lokasi GPS' : 'No GPS location tracking'}</li>
+            <li>{isID ? 'Tidak ada data demografis' : 'No demographic data'}</li>
+          </ul>
+
+          <h2>{isID ? '4. Cookie yang Kami Gunakan' : '4. Cookies We Use'}</h2>
+          <p>
+            {isID
+              ? 'UnduhAja hanya menggunakan cookie yang strictly necessary untuk fungsi website:'
+              : 'UnduhAja only uses cookies strictly necessary for website function:'}
+          </p>
+          <ul>
+            <li><strong>sb-access-token / sb-refresh-token</strong> — {isID ? 'Session autentikasi Supabase (httpOnly, secure).' : 'Supabase authentication session (httpOnly, secure).'}</li>
+            <li><strong>unduhaja-theme</strong> — {isID ? 'Preferensi tema (light/dark) di localStorage.' : 'Theme preference (light/dark) in localStorage.'}</li>
+          </ul>
+          <p>
+            {isID
+              ? 'Kami tidak menggunakan cookie consent banner karena tidak ada cookie non-essential. Sesuai GDPR Article 5(3) dan ePrivacy Directive, cookie strictly necessary tidak memerlukan persetujuan.'
+              : 'We do not use a cookie consent banner because there are no non-essential cookies. Per GDPR Article 5(3) and the ePrivacy Directive, strictly necessary cookies do not require consent.'}
+          </p>
+
+          <h2>{isID ? '5. Penyedia Pihak Ketiga' : '5. Third-Party Providers'}</h2>
+          <p>{isID ? 'UnduhAja menggunakan layanan pihak ketiga berikut:' : 'UnduhAja uses the following third-party services:'}</p>
+          <ul>
+            <li><strong>Vercel</strong> — {isID ? 'Hosting website dan API endpoints. Vercel memproses IP address secara otomatis untuk routing, tetapi tidak untuk analytics.' : 'Website hosting and API endpoints. Vercel processes IP addresses automatically for routing, but not for analytics.'}</li>
+            <li><strong>Supabase</strong> — {isID ? 'Autentikasi dan database user. Data email Anda disimpan di server Supabase (EU region) dengan enkripsi at-rest.' : 'Authentication and user database. Your email is stored on Supabase servers (EU region) with at-rest encryption.'}</li>
+            <li><strong>Upstash</strong> — {isID ? 'Redis cache untuk rate limiting. Hanya menyimpan IP hash dengan TTL 1 jam.' : 'Redis cache for rate limiting. Only stores IP hash with 1-hour TTL.'}</li>
+            <li><strong>Cloudflare Turnstile</strong> — {isID ? 'CAPTCHA anti-bot, hanya muncul saat rate limit terlampaui. Cloudflare mungkin memproses IP untuk verifikasi.' : 'Anti-bot CAPTCHA, only appears when rate limit is exceeded. Cloudflare may process IP for verification.'}</li>
+          </ul>
+
+          <h2>{isID ? '6. Hak Anda' : '6. Your Rights'}</h2>
+          <p>
+            {isID
+              ? 'Sesuai GDPR (untuk pengguna EU) dan UU PDP Indonesia (UU No. 27/2022), Anda memiliki hak berikut:'
+              : 'In accordance with GDPR (for EU users) and Indonesia PDP Law (Law No. 27/2022), you have the following rights:'}
+          </p>
+          <ul>
+            <li>{isID ? 'Hak akses — minta salinan data pribadi yang kami simpan' : 'Right of access — request a copy of personal data we hold'}</li>
+            <li>{isID ? 'Hak penghapusan — minta penghapusan akun dan data terkait' : 'Right to erasure — request deletion of account and related data'}</li>
+            <li>{isID ? 'Hak portabilitas — minta ekspor data dalam format machine-readable' : 'Right to portability — request data export in machine-readable format'}</li>
+            <li>{isID ? 'Hak keberatan — keberatan atas pemrosesan data tertentu' : 'Right to object — object to certain data processing'}</li>
+            <li>{isID ? 'Hak pencabutan persetujuan — kapan saja, tanpa konsekuensi' : 'Right to withdraw consent — at any time, without consequence'}</li>
+          </ul>
+          <p>
+            {isID
+              ? 'Untuk menggunakan hak ini, kirim email ke privacy@unduhaja.vercel.app dengan subjek "Data Request". Kami akan merespons dalam 30 hari kerja.'
+              : 'To exercise these rights, email privacy@unduhaja.vercel.app with subject "Data Request". We will respond within 30 business days.'}
+          </p>
+
+          <h2>{isID ? '7. Keamanan Data' : '7. Data Security'}</h2>
+          <p>
+            {isID
+              ? 'Kami menerapkan praktik keamanan industry-standard: HTTPS untuk semua komunikasi, password di-hash dengan bcrypt (cost factor 12), session cookie httpOnly + Secure + SameSite=Strict, service role key Supabase hanya di server, Content Security Policy strict, dan rate limiting untuk mencegah brute force.'
+              : 'We implement industry-standard security practices: HTTPS for all communication, passwords hashed with bcrypt (cost factor 12), httpOnly + Secure + SameSite=Strict session cookies, Supabase service role key server-side only, strict Content Security Policy, and rate limiting to prevent brute force.'}
+          </p>
+
+          <h2>{isID ? '8. Perubahan Kebijakan' : '8. Policy Changes'}</h2>
+          <p>
+            {isID
+              ? 'Kebijakan ini dapat diperbarui dari waktu ke waktu. Perubahan signifikan akan diumumkan melalui email (jika Anda memiliki akun) dan banner di halaman utama selama 30 hari. Versi terbaru selalu tersedia di halaman ini.'
+              : 'This policy may be updated from time to time. Significant changes will be announced via email (if you have an account) and a banner on the homepage for 30 days. The latest version is always available on this page.'}
+          </p>
+
+          <h2>{isID ? '9. Kontak' : '9. Contact'}</h2>
+          <p>
+            {isID
+              ? 'Pertanyaan terkait privasi? Email kami di privacy@unduhaja.vercel.app. Untuk permintaan data subject access request (DSAR), sertakan email akun Anda dan deskripsi permintaan.'
+              : 'Questions about privacy? Email us at privacy@unduhaja.vercel.app. For data subject access requests (DSAR), include your account email and request description.'}
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer lang={lang} />
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding: var(--space-20) 0 var(--space-12);
+    background:
+      radial-gradient(ellipse at top, var(--color-primary-subtle) 0%, transparent 60%),
+      var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    text-align: center;
+  }
+
+  .page-header h1 {
+    margin: 0 0 var(--space-4);
+  }
+
+  .subtitle {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-lg);
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .updated {
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-sm);
+    margin-top: var(--space-4);
+  }
+
+  .page-content {
+    padding: var(--space-16) 0;
+  }
+
+  .prose h2 {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    margin-top: var(--space-12);
+    margin-bottom: var(--space-3);
+    color: var(--color-text);
+  }
+
+  .prose h2:first-child {
+    margin-top: 0;
+  }
+
+  .prose h3 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-2);
+    color: var(--color-text);
+  }
+
+  .prose p {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-relaxed);
+    margin-bottom: var(--space-4);
+  }
+
+  .prose ul {
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-relaxed);
+    margin-bottom: var(--space-4);
+    padding-left: var(--space-6);
+  }
+
+  .prose li {
+    margin-bottom: var(--space-2);
+  }
+
+  .prose strong {
+    color: var(--color-text);
+  }
+</style>

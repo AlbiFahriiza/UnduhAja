@@ -1,0 +1,468 @@
+---
+export const prerender = true;
+
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Header from '@/components/astro/Header.astro';
+import Footer from '@/components/astro/Footer.astro';
+import { DownloaderTool } from '@/components/react/DownloaderTool';
+import { type Lang, createTranslator, getDictionary } from '@/i18n/utils';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'id' } },
+    { params: { lang: 'en' } },
+  ];
+}
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.params as Props;
+const dict = getDictionary(lang);
+const t = createTranslator(lang);
+
+// Check for auth error in URL (from /api/auth/callback redirect)
+const authError = Astro.url.searchParams.get('auth');
+const authErrorCode = Astro.url.searchParams.get('code');
+const authErrorMessages: Record<string, { id: string; en: string }> = {
+  access_denied: { id: 'Login dibatalkan', en: 'Login cancelled' },
+  invalid_request: { id: 'Request tidak valid', en: 'Invalid request' },
+  server_error: { id: 'Server error', en: 'Server error' },
+  temporarily_unavailable: { id: 'Layanan sementara tidak tersedia', en: 'Service temporarily unavailable' },
+  no_code: { id: 'Kode auth tidak ditemukan', en: 'Auth code not found' },
+  config_error: { id: 'Konfigurasi server bermasalah', en: 'Server configuration error' },
+  token_expired: { id: 'Token kedaluwarsa, coba lagi', en: 'Token expired, try again' },
+  invalid_token: { id: 'Token tidak valid', en: 'Invalid token' },
+  token_used: { id: 'Token sudah dipakai', en: 'Token already used' },
+  rate_limited: { id: 'Terlalu banyak percobaan, coba nanti', en: 'Too many attempts, try later' },
+  exchange_failed: { id: 'Gagal menukar token', en: 'Token exchange failed' },
+  unknown_error: { id: 'Error tidak diketahui', en: 'Unknown error' },
+};
+const authErrorText = authError === 'error' && authErrorCode
+  ? (authErrorMessages[authErrorCode]?.[lang] ?? authErrorMessages.unknown_error[lang])
+  : null;
+
+const isID = lang === 'id';
+
+const translations = {
+  input: dict.input,
+  preview: dict.preview,
+  quality: dict.quality,
+  download: dict.download,
+  errors: dict.errors,
+  toast: dict.toast,
+  auth: dict.auth,
+};
+---
+
+<BaseLayout
+  title={`${t('hero.title')} — UnduhAja`}
+  description={t('hero.description')}
+  lang={lang}
+>
+  <Header lang={lang} />
+
+  <main>
+    <section class="hero">
+      <div class="container hero__inner">
+        <div class="hero__badge">
+          <span class="hero__badge-dot"></span>
+          {t('hero.badge')}
+        </div>
+
+        {authErrorText && (
+          <div class="auth-error-banner" role="alert">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            <span>{authErrorText}</span>
+          </div>
+        )}
+
+        <h1 class="hero__title">{t('hero.title')}</h1>
+        <p class="hero__subtitle">{t('hero.subtitle')}</p>
+        <p class="hero__description">{t('hero.description')}</p>
+
+        <div class="hero__tool" id="downloader">
+          <DownloaderTool client:load lang={lang} translations={translations} />
+        </div>
+
+        <div class="hero__trust">
+          <div class="hero__trust-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+              <polyline points="22 4 12 14.01 9 11.01" />
+            </svg>
+            <span>{lang === 'id' ? 'Tanpa iklan' : 'No ads'}</span>
+          </div>
+          <div class="hero__trust-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+            <span>{lang === 'id' ? 'Privasi aman' : 'Privacy safe'}</span>
+          </div>
+          <div class="hero__trust-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" />
+            </svg>
+            <span>{lang === 'id' ? 'Sangat cepat' : 'Super fast'}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="what-is">
+      <div class="container">
+        <div class="what-is__content">
+          <span class="what-is__label">{isID ? 'Apa itu UnduhAja?' : 'What is UnduhAja?'}</span>
+          <h2 class="what-is__title">
+            {isID
+              ? 'Platform downloader video modern untuk pengguna Indonesia.'
+              : 'Modern video downloader platform for Indonesian users.'}
+          </h2>
+          <p class="what-is__desc">
+            {isID
+              ? 'UnduhAja adalah layanan web yang memungkinkan Anda mengunduh video dari YouTube dan TikTok dengan mudah, cepat, dan gratis. Dirancang dengan fokus pada privasi pengguna — tanpa iklan, tanpa tracking, tanpa penyimpanan riwayat unduhan. Tempel URL video, pilih kualitas (hingga 1080p60 untuk video, MP3 320kbps untuk audio), dan unduh langsung ke perangkat Anda.'
+              : 'UnduhAja is a web service that allows you to download videos from YouTube and TikTok easily, fast, and free. Designed with a focus on user privacy — no ads, no tracking, no download history storage. Paste a video URL, choose quality (up to 1080p60 for video, MP3 320kbps for audio), and download directly to your device.'}
+          </p>
+          <div class="what-is__stats">
+            <div class="what-is__stat">
+              <strong>2</strong>
+              <span>{isID ? 'Platform didukung' : 'Platforms supported'}</span>
+            </div>
+            <div class="what-is__stat">
+              <strong>8+</strong>
+              <span>{isID ? 'Pilihan kualitas' : 'Quality options'}</span>
+            </div>
+            <div class="what-is__stat">
+              <strong>0</strong>
+              <span>{isID ? 'Iklan & tracker' : 'Ads & trackers'}</span>
+            </div>
+            <div class="what-is__stat">
+              <strong>24/7</strong>
+              <span>{isID ? 'Selalu online' : 'Always online'}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features">
+      <div class="container">
+        <div class="features__grid">
+          <div class="feature-card">
+            <div class="feature-card__icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polygon points="23 7 16 12 23 17 23 7" />
+                <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+              </svg>
+            </div>
+            <h3>YouTube & TikTok</h3>
+            <p>{lang === 'id'
+              ? 'Dukungan penuh untuk video YouTube (termasuk Shorts) dan TikTok. Cukup tempel URL, sisanya urusan kami.'
+              : 'Full support for YouTube videos (including Shorts) and TikTok. Just paste the URL, we handle the rest.'}</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-card__icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+              </svg>
+            </div>
+            <h3>{lang === 'id' ? 'Kualitas Pilihan' : 'Quality Choice'}</h3>
+            <p>{lang === 'id'
+              ? 'Dari 144p hingga 1080p60. Atau ekstrak audio MP3/M4A dengan bitrate maksimal dari sumber.'
+              : 'From 144p to 1080p60. Or extract MP3/M4A audio at maximum source bitrate.'}</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-card__icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            </div>
+            <h3>{lang === 'id' ? 'Privasi Utama' : 'Privacy First'}</h3>
+            <p>{lang === 'id'
+              ? 'Tidak ada riwayat, tidak ada tracking, tidak ada cookie. URL kamu diproses langsung, tidak disimpan.'
+              : 'No history, no tracking, no cookies. Your URL is processed on-the-fly, never stored.'}</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-card__icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+            </div>
+            <h3>{lang === 'id' ? 'Cepat & Modern' : 'Fast & Modern'}</h3>
+            <p>{lang === 'id'
+              ? 'Dibangun dengan teknologi terkini. Animasi spring physics yang halus, performa kelas enterprise.'
+              : 'Built with modern tech. Smooth spring physics animations, enterprise-grade performance.'}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer lang={lang} />
+</BaseLayout>
+
+<style>
+  .hero {
+    padding: var(--space-20) 0 var(--space-16);
+    background:
+      radial-gradient(ellipse at top, var(--color-primary-subtle) 0%, transparent 60%),
+      var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .hero__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-6);
+  }
+
+  .auth-error-banner {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-error-subtle);
+    color: var(--color-error);
+    border: 1px solid var(--color-error-border);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    max-width: 480px;
+  }
+
+  .hero__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    box-shadow: var(--shadow-xs);
+  }
+
+  .hero__badge-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-full);
+    background: var(--color-success);
+    box-shadow: 0 0 0 3px var(--color-success-subtle);
+  }
+
+  .hero__title {
+    max-width: 900px;
+    margin: 0;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: var(--font-weight-extrabold);
+    letter-spacing: var(--tracking-tighter);
+    line-height: 1.05;
+    color: var(--color-text);
+  }
+
+  .hero__subtitle {
+    max-width: 600px;
+    margin: 0;
+    font-size: var(--font-size-xl);
+    color: var(--color-text-secondary);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-snug);
+  }
+
+  .hero__description {
+    max-width: 560px;
+    margin: 0;
+    font-size: var(--font-size-base);
+    color: var(--color-text-tertiary);
+    line-height: var(--line-height-relaxed);
+  }
+
+  .hero__tool {
+    width: 100%;
+    max-width: 720px;
+    margin-top: var(--space-8);
+  }
+
+  .hero__trust {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-6);
+    margin-top: var(--space-8);
+    flex-wrap: wrap;
+  }
+
+  .hero__trust-item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .hero__trust-item svg {
+    color: var(--color-primary);
+  }
+
+  .what-is {
+    padding: var(--space-20) 0;
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .what-is__content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .what-is__label {
+    display: inline-block;
+    padding: 4px var(--space-3);
+    background: var(--color-primary-subtle);
+    color: var(--color-primary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    border-radius: var(--radius-full);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    margin-bottom: var(--space-4);
+  }
+
+  .what-is__title {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text);
+    line-height: var(--line-height-tight);
+    margin: 0 0 var(--space-5);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .what-is__desc {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-relaxed);
+    margin: 0 0 var(--space-10);
+  }
+
+  .what-is__stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-5);
+    margin-top: var(--space-8);
+  }
+
+  .what-is__stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .what-is__stat strong {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-extrabold);
+    color: var(--color-primary);
+    line-height: 1;
+  }
+
+  .what-is__stat span {
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-sm);
+    text-align: center;
+  }
+
+  @media (max-width: 600px) {
+    .what-is__stats {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .features {
+    padding: var(--space-24) 0;
+  }
+
+  .features__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-5);
+  }
+
+  .feature-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-6);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    transition: all var(--duration-normal) ease;
+  }
+
+  .feature-card:hover {
+    border-color: var(--color-primary-border);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  .feature-card__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: var(--color-primary-subtle);
+    color: var(--color-primary);
+    border-radius: var(--radius-lg);
+  }
+
+  .feature-card h3 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .feature-card p {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-relaxed);
+    margin: 0;
+  }
+
+  @media (max-width: 1024px) {
+    .features__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .hero {
+      padding: var(--space-12) 0;
+    }
+
+    .hero__trust {
+      gap: var(--space-3);
+    }
+
+    .features__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

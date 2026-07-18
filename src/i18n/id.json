@@ -1,0 +1,211 @@
+{
+  "nav": {
+    "home": "Beranda",
+    "faq": "FAQ",
+    "blog": "Blog",
+    "about": "Tentang",
+    "privacy": "Privasi",
+    "terms": "Ketentuan",
+    "signin": "Masuk",
+    "signout": "Keluar",
+    "account": "Akun",
+    "getStarted": "Mulai Unduh"
+  },
+  "hero": {
+    "badge": "v1.0.0 — YouTube & TikTok",
+    "title": "Download Video Tanpa Ribet.",
+    "subtitle": "Tempel URL. Pilih kualitas. Unduh. Selesai.",
+    "description": "UnduhAja adalah downloader video modern untuk YouTube dan TikTok. Cepat, gratis, tanpa iklan mengganggu. Dibuat di Indonesia untuk Indonesia."
+  },
+  "input": {
+    "placeholder": "Masukkan URL video kamu!",
+    "placeholderTikTok": "https://www.tiktok.com/@xxxx/video/xxxxxxxx",
+    "placeholderYouTube": "https://youtu.be/xxxxxxxx",
+    "paste": "Tempel",
+    "scan": "Scan",
+    "scanning": "Memindai...",
+    "clear": "Bersihkan",
+    "invalid": "URL tidak valid. Pastikan URL dari YouTube atau TikTok.",
+    "unsupported": "Hanya URL YouTube dan TikTok yang didukung.",
+    "dragDrop": "atau seret URL ke sini"
+  },
+  "preview": {
+    "title": "Pratinjau Video",
+    "verified": "Terverifikasi",
+    "views": "tayangan",
+    "duration": "Durasi",
+    "uploaded": "Diunggah",
+    "channel": "Channel",
+    "creator": "Kreator",
+    "description": "Deskripsi",
+    "music": "Musik",
+    "noDescription": "Tidak ada deskripsi",
+    "playVideo": "Putar video",
+    "private": "Video ini bersifat pribadi",
+    "deleted": "Video telah dihapus",
+    "ageRestricted": "Video memerlukan verifikasi usia",
+    "tryAnother": "Coba URL lain"
+  },
+  "quality": {
+    "label": "Kualitas",
+    "video": "Video",
+    "audio": "Audio",
+    "selectQuality": "Pilih kualitas",
+    "default": "1080p60",
+    "mp3": "MP3",
+    "m4a": "M4A",
+    "best": "Sumber maksimal",
+    "available": "Tersedia"
+  },
+  "download": {
+    "button": "Unduh Sekarang",
+    "processing": "Memproses...",
+    "downloading": "Mengunduh...",
+    "success": "Unduhan berhasil!",
+    "error": "Gagal mengunduh",
+    "retry": "Coba lagi",
+    "manualFallback": "Unduh manual",
+    "fileSize": "Ukuran file",
+    "estimatedTime": "Estimasi waktu"
+  },
+  "auth": {
+    "signinTitle": "Masuk ke UnduhAja",
+    "signinSubtitle": "Login untuk batas unduhan lebih longgar",
+    "signupTitle": "Buat akun UnduhAja",
+    "email": "Email",
+    "password": "Kata sandi",
+    "newPassword": "Kata sandi baru",
+    "signinGoogle": "Lanjutkan dengan Google",
+    "signinEmail": "Kirim magic link",
+    "magicLinkSent": "Cek email kamu untuk magic link",
+    "noAccount": "Belum punya akun?",
+    "signup": "Daftar",
+    "haveAccount": "Sudah punya akun?",
+    "signin": "Masuk",
+    "signinBtn": "Masuk",
+    "signupBtn": "Buat Akun",
+    "sendLink": "Kirim Link Reset",
+    "forgot": "Lupa Kata Sandi",
+    "google": "Lanjutkan dengan Google",
+    "forgotLink": "Lupa kata sandi?",
+    "backToSignin": "Kembali ke Masuk",
+    "verificationSent": "Cek email kamu untuk verifikasi. Klik link di email untuk mengaktifkan akun.",
+    "signinSuccess": "Berhasil masuk!",
+    "signupSuccess": "Akun berhasil dibuat!",
+    "passwordReset": "Kata sandi berhasil diubah",
+    "emailRequired": "Email wajib diisi",
+    "passwordRequired": "Kata sandi wajib diisi",
+    "passwordTooShort": "Kata sandi minimal 8 karakter",
+    "invalidEmail": "Format email tidak valid",
+    "genericError": "Terjadi kesalahan. Coba lagi nanti.",
+    "forgotPassword": "Lupa kata sandi?",
+    "resetPassword": "Kirim link reset",
+    "resetSent": "Link reset telah dikirim ke email kamu",
+    "guestLimit": "Mode tamu: 5 unduh/jam",
+    "userLimit": "Mode login: 50 unduh/jam",
+    "signout": "Keluar",
+    "account": "Akun",
+    "profile": "Profil"
+  },
+  "footer": {
+    "product": "Produk",
+    "resources": "Sumber Daya",
+    "legal": "Legal",
+    "changelog": "Changelog",
+    "status": "Status",
+    "documentation": "Dokumentasi",
+    "faq": "FAQ",
+    "guides": "Panduan",
+    "api": "API",
+    "privacy": "Kebijakan Privasi",
+    "terms": "Ketentuan Layanan",
+    "dmca": "DMCA",
+    "copyright": "© 2025 UnduhAja. Dibuat di Indonesia."
+  },
+  "errors": {
+    "rateLimited": "Batas unduh tercapai. Coba lagi nanti atau masuk untuk limit lebih longgar.",
+    "networkError": "Gangguan jaringan. Periksa koneksi kamu.",
+    "serverError": "Server bermasalah. Coba lagi sebentar.",
+    "videoTooLarge": "Video terlalu besar. Maksimal 5GB.",
+    "invalidUrl": "URL tidak valid.",
+    "unsupportedUrl": "URL tidak didukung. Gunakan YouTube atau TikTok.",
+    "videoNotFound": "Video tidak ditemukan.",
+    "videoPrivate": "Video bersifat pribadi.",
+    "videoDeleted": "Video telah dihapus.",
+    "ageRestricted": "Video memerlukan verifikasi usia.",
+    "liveStream": "Live stream tidak didukung.",
+    "playlistNotSupported": "Playlist tidak didukung. Tempel URL video tunggal."
+  },
+  "toast": {
+    "success": "Berhasil",
+    "error": "Gagal",
+    "info": "Info",
+    "warning": "Peringatan",
+    "copied": "Tersalin ke clipboard",
+    "downloadStarted": "Unduhan dimulai",
+    "downloadComplete": "Unduhan selesai",
+    "downloadFailed": "Unduhan gagal"
+  },
+  "common": {
+    "loading": "Memuat...",
+    "retry": "Coba lagi",
+    "cancel": "Batal",
+    "confirm": "Konfirmasi",
+    "close": "Tutup",
+    "back": "Kembali",
+    "next": "Berikutnya",
+    "previous": "Sebelumnya",
+    "copy": "Salin",
+    "share": "Bagikan",
+    "language": "Bahasa",
+    "theme": "Tema",
+    "lightMode": "Mode terang",
+    "darkMode": "Mode gelap"
+  },
+  "pages": {
+    "faq": {
+      "title": "Pertanyaan yang Sering Diajukan",
+      "subtitle": "Semua yang perlu kamu tahu tentang UnduhAja"
+    },
+    "about": {
+      "title": "Tentang UnduhAja",
+      "subtitle": "Tool downloader video modern untuk Indonesia"
+    },
+    "privacy": {
+      "title": "Kebijakan Privasi",
+      "subtitle": "Privasi kamu adalah prioritas kami"
+    },
+    "terms": {
+      "title": "Ketentuan Layanan",
+      "subtitle": "Syarat penggunaan UnduhAja"
+    },
+    "blog": {
+      "title": "Blog UnduhAja",
+      "subtitle": "Tutorial, tips, dan update terbaru"
+    },
+    "changelog": {
+      "title": "Changelog",
+      "subtitle": "Riwayat pembaruan UnduhAja"
+    },
+    "docs": {
+      "title": "Dokumentasi",
+      "subtitle": "Panduan lengkap menggunakan UnduhAja"
+    },
+    "guides": {
+      "title": "Panduan",
+      "subtitle": "Tutorial step-by-step untuk berbagai skenario"
+    },
+    "api-docs": {
+      "title": "API Documentation",
+      "subtitle": "Integrasi UnduhAja API untuk developer"
+    },
+    "dmca": {
+      "title": "DMCA Policy",
+      "subtitle": "Kebijakan penghapusan konten berhak cipta"
+    },
+    "account": {
+      "title": "Akun Saya",
+      "subtitle": "Kelola preferensi dan riwayat akun"
+    }
+  }
+}

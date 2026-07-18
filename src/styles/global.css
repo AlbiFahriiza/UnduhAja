@@ -1,0 +1,297 @@
+/* ============================================
+   UnduhAja Global Styles
+   ============================================ */
+
+@import './tokens.css';
+
+/* ---------------------------------------------
+   Reset
+   --------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: var(--line-height-normal);
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+body {
+  min-height: 100vh;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  color: var(--color-text);
+  background: var(--color-bg);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
+}
+
+/* ---------------------------------------------
+   Typography
+   --------------------------------------------- */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-text);
+}
+
+h1 {
+  font-size: clamp(2.5rem, 5vw + 1rem, 4.5rem);
+  font-weight: var(--font-weight-extrabold);
+  letter-spacing: var(--tracking-tighter);
+  line-height: 1.05;
+}
+
+h2 {
+  font-size: clamp(2rem, 3vw + 1rem, 3rem);
+  font-weight: var(--font-weight-bold);
+}
+
+h3 {
+  font-size: clamp(1.5rem, 2vw + 0.5rem, 2rem);
+}
+
+h4 {
+  font-size: var(--font-size-xl);
+}
+
+h5 {
+  font-size: var(--font-size-lg);
+}
+
+h6 {
+  font-size: var(--font-size-base);
+}
+
+p {
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-secondary);
+}
+
+a {
+  color: var(--color-text-link);
+  text-decoration: none;
+  transition: color var(--duration-fast) ease;
+}
+
+a:hover {
+  color: var(--color-primary-hover);
+}
+
+code, pre, kbd, samp {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+code {
+  background: var(--color-surface-sunken);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+}
+
+pre {
+  background: var(--color-surface-sunken);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+}
+
+pre code {
+  background: transparent;
+  padding: 0;
+}
+
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+input, button, textarea, select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+ul, ol {
+  padding-left: var(--space-6);
+}
+
+/* ---------------------------------------------
+   Layout utilities
+   --------------------------------------------- */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+.container-narrow {
+  max-width: var(--container-narrow);
+}
+
+.container-wide {
+  max-width: var(--container-wide);
+}
+
+.section {
+  padding: var(--space-24) 0;
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: var(--space-16) 0;
+  }
+}
+
+/* ---------------------------------------------
+   Focus visible (accessibility)
+   --------------------------------------------- */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  border-radius: var(--radius-sm);
+}
+
+/* ---------------------------------------------
+   Selection
+   --------------------------------------------- */
+::selection {
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+
+/* ---------------------------------------------
+   Scrollbar (subtle, modern)
+   --------------------------------------------- */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-tertiary);
+}
+
+/* ---------------------------------------------
+   Theme transition (smooth toggle)
+   --------------------------------------------- */
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease !important;
+  transition-delay: 0 !important;
+}
+
+/* ---------------------------------------------
+   Sonner toast — theme integration
+   --------------------------------------------- */
+[data-sonner-toaster] {
+  --normal-bg: var(--color-surface);
+  --normal-border: var(--color-border);
+  --normal-text: var(--color-text);
+  --border-radius: var(--radius-md);
+  --font-family: var(--font-sans);
+}
+
+[data-sonner-toaster] [data-sonner-toast] {
+  font-family: var(--font-sans);
+  background: var(--normal-bg);
+  border: 1px solid var(--normal-border);
+  color: var(--normal-text);
+  box-shadow: var(--shadow-lg);
+}
+
+[data-sonner-toaster] [data-sonner-toast] [data-description] {
+  color: var(--color-text-secondary);
+}
+
+[data-sonner-toaster] [data-sonner-toast] [data-close-button] {
+  color: var(--color-text-tertiary);
+  background: transparent;
+}
+
+[data-sonner-toaster] [data-sonner-toast] [data-close-button]:hover {
+  color: var(--color-text);
+  background: var(--color-surface-sunken);
+}
+
+/* Rich colors variant — keep brand-aligned */
+[data-sonner-toaster] [data-sonner-toast][data-type='success'] {
+  background: var(--color-success-subtle);
+  border-color: var(--color-success-border);
+  color: var(--color-text);
+}
+
+[data-sonner-toaster] [data-sonner-toast][data-type='success'] [data-icon] svg {
+  color: var(--color-success);
+}
+
+[data-sonner-toaster] [data-sonner-toast][data-type='error'] {
+  background: var(--color-error-subtle);
+  border-color: var(--color-error-border);
+  color: var(--color-text);
+}
+
+[data-sonner-toaster] [data-sonner-toast][data-type='error'] [data-icon] svg {
+  color: var(--color-error);
+}
+
+[data-sonner-toaster] [data-sonner-toast][data-type='warning'] {
+  background: var(--color-warning-subtle);
+  border-color: var(--color-warning-border);
+  color: var(--color-text);
+}
+
+[data-sonner-toaster] [data-sonner-toast][data-type='warning'] [data-icon] svg {
+  color: var(--color-warning);
+}
+
+[data-sonner-toaster] [data-sonner-toast][data-type='info'] [data-icon] svg {
+  color: var(--color-info);
+}
+
+/* Mobile responsive */
+@media (max-width: 480px) {
+  [data-sonner-toaster] {
+    left: var(--space-4);
+    right: var(--space-4);
+  }
+
+  [data-sonner-toaster] [data-sonner-toast] {
+    width: 100%;
+  }
+}

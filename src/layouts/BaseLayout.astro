@@ -1,0 +1,138 @@
+---
+import '@/styles/global.css';
+
+export interface Props {
+  title: string;
+  description?: string;
+  lang?: 'id' | 'en';
+  image?: string;
+  noindex?: boolean;
+  googleSiteVerification?: string;
+}
+
+const {
+  title,
+  description = 'UnduhAja — Download video YouTube & TikTok tanpa ribet. Cepat, gratis, modern.',
+  lang = 'id',
+  image = '/og-default.png',
+  noindex = false,
+  googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION,
+} = Astro.props;
+
+// Support multiple verification codes (comma-separated for multiple Google Search Console properties)
+const googleVerificationCodes = (googleSiteVerification ?? '')
+  .split(',')
+  .map((code: string) => code.trim())
+  .filter(Boolean);
+
+const siteUrl = Astro.site ?? new URL('https://unduhaja.vercel.app');
+const canonicalURL = new URL(Astro.url.pathname, siteUrl).toString();
+const ogImage = new URL(image, siteUrl).toString();
+
+// Structured data
+const orgSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'UnduhAja',
+  url: siteUrl.toString(),
+  logo: new URL('/logo.png', siteUrl).toString(),
+  description: 'Modern video downloader for YouTube and TikTok. Made in Indonesia.',
+  foundingDate: '2025',
+  areaServed: 'ID',
+};
+---
+
+<!doctype html>
+<html lang={lang} data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content={lang === 'id' ? 'id_ID' : 'en_US'} />
+    <meta property="og:site_name" content="UnduhAja" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Theme color -->
+    <meta name="theme-color" content="#2563eb" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b0f1a" media="(prefers-color-scheme: dark)" />
+
+    {googleVerificationCodes.map((code: string) => (
+      <meta name="google-site-verification" content={code} />
+    ))}
+
+    <!-- Preload critical fonts -->
+    <link
+      rel="preload"
+      href="/fonts/PlusJakartaSans-Regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/PlusJakartaSans-Bold.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/PlusJakartaSans-ExtraBold.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <!-- Structured data -->
+    <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
+
+    <!-- Theme initialization (prevent FOUC) -->
+    <script is:inline>
+      (function () {
+        const stored = localStorage.getItem('unduhaja-theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = stored ?? (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+
+    <!-- Service worker registration -->
+    <script is:inline>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch((err) => {
+            console.warn('[PWA] SW registration failed:', err);
+          });
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  /* Font preloading optimization */
+  @import '/src/styles/fonts.css';
+</style>

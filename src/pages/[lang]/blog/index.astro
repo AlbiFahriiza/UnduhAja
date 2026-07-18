@@ -1,0 +1,264 @@
+---
+export const prerender = true;
+
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Header from '@/components/astro/Header.astro';
+import Footer from '@/components/astro/Footer.astro';
+import { type Lang, createTranslator, localizePath } from '@/i18n/utils';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'id' } },
+    { params: { lang: 'en' } },
+  ];
+}
+
+const { lang } = Astro.params as { lang: Lang };
+const t = createTranslator(lang);
+const isID = lang === 'id';
+
+const posts = isID ? [
+  {
+    slug: 'cara-unduh-video-youtube-1080p60',
+    title: 'Cara Mengunduh Video YouTube 1080p60 dengan Kualitas Maksimal',
+    excerpt: 'Panduan lengkap mengunduh video YouTube kualitas Full HD 60fps menggunakan UnduhAja, termasuk tips memilih kualitas yang tepat untuk berbagai kebutuhan.',
+    date: '2025-07-10',
+    readingTime: '5 menit',
+    tag: 'Tutorial',
+  },
+  {
+    slug: 'tiktok-downloader-tanpa-watermark',
+    title: 'Cara Mengunduh Video TikTok Tanpa Watermark (Legal & Aman)',
+    excerpt: 'Pelajari cara mengunduh video TikTok tanpa watermark menggunakan UnduhAja, dengan penjelasan etika dan batasan legal yang perlu Anda ketahui.',
+    date: '2025-07-05',
+    readingTime: '4 menit',
+    tag: 'Tutorial',
+  },
+  {
+    slug: 'ekstrak-audio-mp3-dari-youtube',
+    title: 'Cara Ekstrak Audio MP3 320kbps dari Video YouTube',
+    excerpt: 'Tutorial ekstraksi audio berkualitas tinggi dari video YouTube. Pelajari perbedaan MP3 vs M4A dan kapan menggunakan masing-masing format.',
+    date: '2025-06-28',
+    readingTime: '6 menit',
+    tag: 'Audio',
+  },
+  {
+    slug: 'privasi-downloader-video',
+    title: 'Privasi di Era Downloader Video: Apa yang Perlu Anda Tahu',
+    excerpt: 'Mengapa privasi penting saat menggunakan downloader video, dan bagaimana UnduhAja melindungi data Anda dengan pendekatan privacy-first.',
+    date: '2025-06-20',
+    readingTime: '7 menit',
+    tag: 'Privasi',
+  },
+] : [
+  {
+    slug: 'how-to-download-youtube-1080p60',
+    title: 'How to Download YouTube Videos at 1080p60 with Maximum Quality',
+    excerpt: 'Complete guide to downloading YouTube videos in Full HD 60fps quality using UnduhAja, including tips for choosing the right quality for different needs.',
+    date: '2025-07-10',
+    readingTime: '5 min',
+    tag: 'Tutorial',
+  },
+  {
+    slug: 'tiktok-downloader-without-watermark',
+    title: 'How to Download TikTok Videos Without Watermark (Legal & Safe)',
+    excerpt: 'Learn how to download TikTok videos without watermark using UnduhAja, with explanations of ethics and legal limitations you need to know.',
+    date: '2025-07-05',
+    readingTime: '4 min',
+    tag: 'Tutorial',
+  },
+  {
+    slug: 'extract-mp3-audio-from-youtube',
+    title: 'How to Extract 320kbps MP3 Audio from YouTube Videos',
+    excerpt: 'Tutorial for high-quality audio extraction from YouTube videos. Learn the difference between MP3 vs M4A and when to use each format.',
+    date: '2025-06-28',
+    readingTime: '6 min',
+    tag: 'Audio',
+  },
+  {
+    slug: 'privacy-video-downloader',
+    title: 'Privacy in the Video Downloader Era: What You Need to Know',
+    excerpt: 'Why privacy matters when using video downloaders, and how UnduhAja protects your data with a privacy-first approach.',
+    date: '2025-06-20',
+    readingTime: '7 min',
+    tag: 'Privacy',
+  },
+];
+
+const blogSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  name: 'UnduhAja Blog',
+  url: 'https://unduhaja.vercel.app/blog',
+  blogPost: posts.map((p) => ({
+    '@type': 'BlogPosting',
+    headline: p.title,
+    description: p.excerpt,
+    datePublished: p.date,
+    author: { '@type': 'Person', name: 'Albi Fahriza' },
+  })),
+};
+---
+
+<BaseLayout
+  title={`${t('pages.blog.title')} — UnduhAja`}
+  description={t('pages.blog.subtitle')}
+  lang={lang}
+>
+  <Header lang={lang} />
+
+  <main>
+    <section class="page-header">
+      <div class="container">
+        <h1>{t('pages.blog.title')}</h1>
+        <p class="subtitle">{t('pages.blog.subtitle')}</p>
+      </div>
+    </section>
+
+    <section class="page-content">
+      <div class="container">
+        <script type="application/ld+json" set:html={JSON.stringify(blogSchema)} />
+
+        <div class="posts-grid">
+          {posts.map((post) => (
+            <article class="post-card">
+              <a href={localizePath(lang, `/blog/${post.slug}`)} class="post-card__link">
+                <div class="post-card__meta">
+                  <span class="post-card__tag">{post.tag}</span>
+                  <span class="post-card__date">
+                    {new Date(post.date).toLocaleDateString(isID ? 'id-ID' : 'en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                    })}
+                  </span>
+                </div>
+                <h2 class="post-card__title">{post.title}</h2>
+                <p class="post-card__excerpt">{post.excerpt}</p>
+                <div class="post-card__footer">
+                  <span class="post-card__author">{isID ? 'Oleh' : 'By'} Albi Fahriza</span>
+                  <span class="post-card__reading">{post.readingTime}</span>
+                </div>
+              </a>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer lang={lang} />
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding: var(--space-20) 0 var(--space-12);
+    background:
+      radial-gradient(ellipse at top, var(--color-primary-subtle) 0%, transparent 60%),
+      var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    text-align: center;
+  }
+
+  .page-header h1 {
+    margin: 0 0 var(--space-4);
+  }
+
+  .subtitle {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-lg);
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .page-content {
+    padding: var(--space-16) 0;
+  }
+
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-6);
+  }
+
+  .post-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    transition: all var(--duration-normal) ease;
+    overflow: hidden;
+  }
+
+  .post-card:hover {
+    border-color: var(--color-primary-border);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  .post-card__link {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-6);
+    color: inherit;
+    text-decoration: none;
+    height: 100%;
+  }
+
+  .post-card__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .post-card__tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px var(--space-2);
+    background: var(--color-primary-subtle);
+    color: var(--color-primary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    border-radius: var(--radius-sm);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+
+  .post-card__date {
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
+  }
+
+  .post-card__title {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text);
+    line-height: var(--line-height-snug);
+    margin: 0;
+  }
+
+  .post-card__excerpt {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-relaxed);
+    margin: 0;
+    flex: 1;
+  }
+
+  .post-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--color-border-subtle);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+  }
+
+  @media (max-width: 768px) {
+    .posts-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

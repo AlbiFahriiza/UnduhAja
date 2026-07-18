@@ -1,0 +1,330 @@
+---
+export const prerender = true;
+
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Header from '@/components/astro/Header.astro';
+import Footer from '@/components/astro/Footer.astro';
+import { type Lang, createTranslator } from '@/i18n/utils';
+
+export function getStaticPaths() {
+  return [{ params: { lang: 'id' } }, { params: { lang: 'en' } }];
+}
+
+const { lang } = Astro.params as { lang: Lang };
+const t = createTranslator(lang);
+const isID = lang === 'id';
+
+const endpoints = [
+  {
+    method: 'POST',
+    path: '/functions/v1/extract',
+    description: isID ? 'Ekstrak metadata video dari URL YouTube atau TikTok.' : 'Extract video metadata from YouTube or TikTok URL.',
+    auth: 'Bearer JWT (optional, untuk rate limit lebih tinggi)',
+    rateLimit: '20/jam (guest) · 100/jam (authenticated)',
+    request: `{
+  "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+}`,
+    response: `{
+  "metadata": {
+    "platform": "youtube",
+    "videoId": "dQw4w9WgXcQ",
+    "title": "Video Title",
+    "channel": "Channel Name",
+    "thumbnail": "https://...",
+    "duration": "12:34",
+    "viewCount": 1234567,
+    "availableQualities": ["1080p60", "1080p", "720p", "480p"]
+  }
+}`,
+  },
+  {
+    method: 'GET',
+    path: '/functions/v1/download?url=...&format=...&type=video|audio',
+    description: isID ? 'Stream file video/audio ke browser.' : 'Stream video/audio file to browser.',
+    auth: 'Bearer JWT (optional)',
+    rateLimit: '5/jam (guest) · 50/jam (authenticated)',
+    request: `GET /functions/v1/download?url=https%3A%2F%2Fyoutu.be%2FdQw4w9WgXcQ&format=1080p60&type=video`,
+    response: isID ? 'Stream binary file dengan Content-Disposition: attachment.' : 'Binary file stream with Content-Disposition: attachment.',
+  },
+  {
+    method: 'POST',
+    path: '/functions/v1/verify-turnstile',
+    description: isID ? 'Verifikasi Cloudflare Turnstile token (saat rate limit exceeded).' : 'Verify Cloudflare Turnstile token (when rate limit exceeded).',
+    auth: 'Public',
+    rateLimit: '10/jam per IP',
+    request: `{
+  "token": "turnstile-token-from-frontend"
+}`,
+    response: `{
+  "success": true,
+  "challenge_ts": "2026-07-18T...",
+  "hostname": "unduhaja.vercel.app"
+}`,
+  },
+];
+
+const errorCodes = [
+  { code: 'invalidUrl', description: isID ? 'URL tidak valid' : 'Invalid URL' },
+  { code: 'unsupportedUrl', description: isID ? 'URL tidak didukung (bukan YouTube/TikTok)' : 'URL not supported (not YouTube/TikTok)' },
+  { code: 'videoNotFound', description: isID ? 'Video tidak ditemukan' : 'Video not found' },
+  { code: 'videoPrivate', description: isID ? 'Video bersifat pribadi' : 'Video is private' },
+  { code: 'videoDeleted', description: isID ? 'Video telah dihapus' : 'Video has been deleted' },
+  { code: 'ageRestricted', description: isID ? 'Video memerlukan verifikasi usia' : 'Video requires age verification' },
+  { code: 'liveStream', description: isID ? 'Live stream tidak didukung' : 'Live streams not supported' },
+  { code: 'playlistNotSupported', description: isID ? 'Playlist tidak didukung' : 'Playlists not supported' },
+  { code: 'rateLimited', description: isID ? 'Batas unduh tercapai' : 'Rate limit reached' },
+  { code: 'videoTooLarge', description: isID ? 'Video melebihi 5GB' : 'Video exceeds 5GB limit' },
+  { code: 'serverError', description: isID ? 'Server error' : 'Server error' },
+];
+---
+
+<BaseLayout
+  title={`${t('pages.api-docs.title')} — UnduhAja`}
+  description={t('pages.api-docs.subtitle')}
+  lang={lang}
+>
+  <Header lang={lang} />
+
+  <main>
+    <section class="page-header">
+      <div class="container">
+        <h1>{t('pages.api-docs.title')}</h1>
+        <p class="subtitle">{t('pages.api-docs.subtitle')}</p>
+      </div>
+    </section>
+
+    <section class="page-content">
+      <div class="container container-narrow">
+        <div class="intro">
+          <h2>{isID ? 'Base URL' : 'Base URL'}</h2>
+          <pre class="code-block"><code>https://YOUR_PROJECT.supabase.co</code></pre>
+          <p>{isID ? 'Semua endpoint di bawah mengikuti base URL di atas. Authentication menggunakan Supabase JWT token via header Authorization.' : 'All endpoints below follow the base URL above. Authentication uses Supabase JWT token via Authorization header.'}</p>
+        </div>
+
+        <div class="endpoints">
+          {endpoints.map((ep) => (
+            <article class="endpoint">
+              <header class="endpoint__header">
+                <div class="endpoint__method-row">
+                  <span class={`endpoint__method endpoint__method--${ep.method.toLowerCase()}`}>{ep.method}</span>
+                  <code class="endpoint__path">{ep.path}</code>
+                </div>
+                <p class="endpoint__desc">{ep.description}</p>
+              </header>
+
+              <div class="endpoint__meta">
+                <div class="endpoint__meta-item">
+                  <span class="endpoint__meta-label">Auth</span>
+                  <code>{ep.auth}</code>
+                </div>
+                <div class="endpoint__meta-item">
+                  <span class="endpoint__meta-label">Rate Limit</span>
+                  <code>{ep.rateLimit}</code>
+                </div>
+              </div>
+
+              <div class="endpoint__section">
+                <h4>{isID ? 'Request' : 'Request'}</h4>
+                <pre class="code-block"><code>{ep.request}</code></pre>
+              </div>
+
+              <div class="endpoint__section">
+                <h4>{isID ? 'Response' : 'Response'}</h4>
+                <pre class="code-block"><code>{ep.response}</code></pre>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <div class="errors">
+          <h2>{isID ? 'Kode Error' : 'Error Codes'}</h2>
+          <div class="errors__table">
+            <div class="errors__row errors__row--header">
+              <span>{isID ? 'Kode' : 'Code'}</span>
+              <span>{isID ? 'Deskripsi' : 'Description'}</span>
+            </div>
+            {errorCodes.map((err) => (
+              <div class="errors__row">
+                <code class="errors__code">{err.code}</code>
+                <span class="errors__desc">{err.description}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div class="example">
+          <h2>{isID ? 'Contoh: JavaScript fetch()' : 'Example: JavaScript fetch()'}</h2>
+          <pre class="code-block"><code>{`// Extract metadata
+const res = await fetch('https://YOUR_PROJECT.supabase.co/functions/v1/extract', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'apikey': 'YOUR_SUPABASE_ANON_KEY',
+    'Authorization': 'Bearer USER_JWT_TOKEN' // optional
+  },
+  body: JSON.stringify({
+    url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+  })
+});
+
+const data = await res.json();
+console.log(data.metadata.title);`}</code></pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer lang={lang} />
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding: var(--space-20) 0 var(--space-12);
+    background: radial-gradient(ellipse at top, var(--color-primary-subtle) 0%, transparent 60%), var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    text-align: center;
+  }
+  .page-header h1 { margin: 0 0 var(--space-4); }
+  .subtitle {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-lg);
+    max-width: 560px;
+    margin: 0 auto;
+  }
+  .page-content { padding: var(--space-16) 0; }
+
+  .intro h2, .errors h2, .example h2 {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text);
+    margin: var(--space-12) 0 var(--space-4);
+  }
+  .intro p {
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-relaxed);
+    margin: var(--space-3) 0 0;
+  }
+
+  .code-block {
+    background: var(--color-surface-sunken);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm);
+    color: var(--color-text);
+    line-height: var(--line-height-normal);
+    margin: 0;
+  }
+
+  .endpoints {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    margin-top: var(--space-8);
+  }
+  .endpoint {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-6);
+  }
+  .endpoint__header { margin-bottom: var(--space-5); }
+  .endpoint__method-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-2);
+    flex-wrap: wrap;
+  }
+  .endpoint__method {
+    padding: 4px var(--space-3);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    border-radius: var(--radius-sm);
+    letter-spacing: var(--tracking-wide);
+    color: white;
+  }
+  .endpoint__method--get { background: var(--color-info); }
+  .endpoint__method--post { background: var(--color-success); }
+  .endpoint__path {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm);
+    color: var(--color-text);
+    word-break: break-all;
+  }
+  .endpoint__desc {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    margin: 0;
+  }
+  .endpoint__meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+    padding: var(--space-3) 0;
+    border-top: 1px solid var(--color-border-subtle);
+    border-bottom: 1px solid var(--color-border-subtle);
+    margin-bottom: var(--space-4);
+  }
+  .endpoint__meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .endpoint__meta-label {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    font-weight: var(--font-weight-semibold);
+  }
+  .endpoint__meta-item code {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+  }
+  .endpoint__section { margin-bottom: var(--space-3); }
+  .endpoint__section h4 {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--space-2);
+  }
+
+  .errors__table {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .errors__row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-border-subtle);
+    align-items: center;
+  }
+  .errors__row:last-child { border-bottom: none; }
+  .errors__row--header {
+    background: var(--color-surface-sunken);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+    font-size: var(--font-size-sm);
+  }
+  .errors__code {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm);
+    color: var(--color-error);
+  }
+  .errors__desc {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+  }
+  .example { margin-top: var(--space-12); }
+
+  @media (max-width: 600px) {
+    .endpoint__meta { grid-template-columns: 1fr; }
+    .errors__row { grid-template-columns: 1fr; gap: 4px; }
+  }
+</style>

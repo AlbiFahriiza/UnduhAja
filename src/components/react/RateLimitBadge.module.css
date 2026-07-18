@@ -1,0 +1,89 @@
+.badge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs);
+  border: 1px solid;
+}
+
+.badgeGuest {
+  background: var(--color-warning-subtle);
+  border-color: var(--color-warning-border);
+  color: var(--color-warning);
+}
+
+.badgeUser {
+  background: var(--color-success-subtle);
+  border-color: var(--color-success-border);
+  color: var(--color-success);
+}
+
+.info {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex: 1;
+  min-width: 0;
+}
+
+.icon {
+  flex-shrink: 0;
+}
+
+.label {
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+}
+
+.limit {
+  opacity: 0.9;
+  white-space: nowrap;
+}
+
+.separator {
+  opacity: 0.5;
+}
+
+.remaining {
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px var(--space-2);
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color var(--duration-fast) ease;
+}
+
+.cta:hover {
+  background: var(--color-primary-hover);
+}
+
+@media (max-width: 480px) {
+  .badge {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-2);
+  }
+
+  .info {
+    justify-content: center;
+  }
+
+  .cta {
+    justify-content: center;
+  }
+}

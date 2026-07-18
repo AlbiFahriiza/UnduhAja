@@ -1,0 +1,17 @@
+{
+  "name": "unduhaja-api",
+  "version": "1.0.0",
+  "description": "Custom Cloudflare Worker for UnduhAja — YouTube + TikTok downloader API",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250101.0",
+    "wrangler": "^3.99.0",
+    "typescript": "^5.7.0"
+  }
+}

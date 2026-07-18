@@ -1,0 +1,124 @@
+.tool {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  width: 100%;
+}
+
+.resultArea {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  min-height: 200px;
+}
+
+.resultContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.optionsRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+  max-width: 920px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.turnstileWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-6);
+  background: var(--color-warning-subtle);
+  border: 1px solid var(--color-warning-border);
+  border-radius: var(--radius-lg);
+  max-width: 720px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.turnstileHint {
+  margin: 0;
+  color: var(--color-warning);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+}
+
+/* ============================================
+   Skeleton loading state
+   ============================================ */
+.skeleton {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.skeletonMedia {
+  background: var(--color-surface-sunken);
+  min-height: 320px;
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+.skeletonInfo {
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.skeletonLine {
+  height: 14px;
+  background: var(--color-surface-sunken);
+  border-radius: var(--radius-sm);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+.skeletonTitle {
+  height: 24px;
+  width: 80%;
+}
+
+.skeletonMeta {
+  width: 60%;
+}
+
+.skeletonText {
+  width: 100%;
+}
+
+.skeletonText:nth-child(5) {
+  width: 70%;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+@media (max-width: 768px) {
+  .skeleton {
+    grid-template-columns: 1fr;
+  }
+
+  .skeletonMedia {
+    min-height: 220px;
+  }
+
+  .optionsRow {
+    grid-template-columns: 1fr;
+  }
+}

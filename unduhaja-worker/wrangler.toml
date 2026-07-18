@@ -1,0 +1,22 @@
+name = "unduhaja-api"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Routes
+# /api/json       — POST  (main API)
+# /api/health     — GET   (health check)
+
+# Secrets (set via wrangler secret put):
+# - API_KEY: shared secret between Supabase Edge Functions and this Worker
+
+# Limits:
+# Free tier: 100,000 requests/day, 10ms CPU time per request (default)
+# Paid tier: $5/month for 10M requests + custom CPU limits
+
+[observability]
+enabled = true
+
+# Vars (non-secret, can be in code)
+[vars]
+# API_KEY set via: wrangler secret put API_KEY

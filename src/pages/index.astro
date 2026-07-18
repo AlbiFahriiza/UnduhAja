@@ -1,0 +1,233 @@
+---
+/**
+ * / — Root page.
+ *
+ * Renders full HTML with meta tags (including Google verification) + auto-redirect
+ * via meta refresh + JavaScript. This way Googlebot sees content + meta tags
+ * on first request without following redirect.
+ *
+ * Strategy:
+ *   1. Server checks Accept-Language header → pick ID or EN
+ *   2. Render full HTML with that language content + meta tags
+ *   3. Auto-redirect to /{lang}/ via <meta http-equiv="refresh"> + JS fallback
+ */
+import { getLangFromHeaders, defaultLang, getDictionary, createTranslator } from '@/i18n/utils';
+import '@/styles/global.css';
+
+const lang = getLangFromHeaders(Astro.request.headers) ?? defaultLang;
+const dict = getDictionary(lang);
+const t = createTranslator(lang);
+const isID = lang === 'id';
+
+const googleVerificationCodes = (import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION ?? '')
+  .split(',')
+  .map((c: string) => c.trim())
+  .filter(Boolean);
+
+const siteUrl = 'https://unduhaja.vercel.app';
+const redirectUrl = `${siteUrl}/${lang}/`;
+const orgSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'UnduhAja',
+  url: siteUrl,
+  logo: `${siteUrl}/logo.png`,
+  description: 'Modern video downloader for YouTube and TikTok. Made in Indonesia.',
+  foundingDate: '2025',
+  areaServed: 'ID',
+};
+---
+
+<!doctype html>
+<html lang={lang} data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>UnduhAja — {t('hero.title')}</title>
+    <meta name="description" content="UnduhAja is a modern video downloader for YouTube and TikTok. Fast, free, no ads. Made in Indonesia." />
+
+    <!-- Canonical URL points to language-specific page -->
+    <link rel="canonical" href={redirectUrl} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={siteUrl} />
+    <meta property="og:title" content="UnduhAja — Download Video YouTube & TikTok" />
+    <meta property="og:description" content="Modern video downloader for YouTube and TikTok. Fast, free, no ads." />
+    <meta property="og:image" content={`${siteUrl}/og-default.png`} />
+    <meta property="og:locale" content={lang === 'id' ? 'id_ID' : 'en_US'} />
+    <meta property="og:site_name" content="UnduhAja" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="UnduhAja — Download Video YouTube & TikTok" />
+    <meta name="twitter:description" content="Modern video downloader for YouTube and TikTok. Fast, free, no ads." />
+    <meta name="twitter:image" content={`${siteUrl}/og-default.png`} />
+
+    <!-- Theme color -->
+    <meta name="theme-color" content="#2563eb" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b0f1a" media="(prefers-color-scheme: dark)" />
+
+    <!-- Google Site Verification (multiple codes supported) -->
+    {googleVerificationCodes.map((code: string) => (
+      <meta name="google-site-verification" content={code} />
+    ))}
+
+    <!-- Structured data -->
+    <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
+
+    <!-- Theme init (prevent FOUC) -->
+    <script is:inline>
+      (function () {
+        const stored = localStorage.getItem('unduhaja-theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = stored ?? (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+
+    <!-- Auto-redirect to language-specific page -->
+    <meta http-equiv="refresh" content={`0; url=${redirectUrl}`} />
+    <script is:inline set:html={`window.location.replace(${JSON.stringify(redirectUrl)});`} />
+
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body {
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+        background: #F8FAFC;
+        color: #0F172A;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 24px;
+      }
+      .container {
+        max-width: 560px;
+        width: 100%;
+      }
+      .logo {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 32px;
+        font-size: 24px;
+        font-weight: 800;
+        color: #0F172A;
+        text-decoration: none;
+      }
+      .logo img {
+        width: 40px;
+        height: 40px;
+      }
+      h1 {
+        font-size: 32px;
+        font-weight: 800;
+        color: #0F172A;
+        margin-bottom: 12px;
+        letter-spacing: -0.02em;
+      }
+      p {
+        color: #475569;
+        font-size: 16px;
+        line-height: 1.6;
+        margin-bottom: 24px;
+      }
+      .redirect-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 24px;
+        background: #2563EB;
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        border-radius: 12px;
+        transition: background-color 150ms ease;
+      }
+      .redirect-link:hover { background: #1D4ED8; }
+      .purpose {
+        margin-top: 48px;
+        padding: 24px;
+        background: white;
+        border: 1px solid #E2E8F0;
+        border-radius: 16px;
+        text-align: left;
+      }
+      .purpose h2 {
+        font-size: 18px;
+        font-weight: 700;
+        color: #0F172A;
+        margin-bottom: 8px;
+      }
+      .purpose p {
+        font-size: 14px;
+        color: #475569;
+        margin: 0;
+      }
+      .lang-switch {
+        margin-top: 24px;
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+      }
+      .lang-switch a {
+        padding: 8px 16px;
+        background: white;
+        color: #2563EB;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        border: 1px solid #E2E8F0;
+        border-radius: 8px;
+      }
+      .lang-switch a:hover { background: #EFF6FF; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a href={redirectUrl} class="logo">
+        <img
+          src="/icons/logo-header.png"
+          srcset="/icons/logo-header.png 1x, /icons/logo-header@2x.png 2x"
+          width="40"
+          height="40"
+          alt="UnduhAja"
+        />
+        <span>UnduhAja</span>
+      </a>
+
+      <h1>{isID ? 'Download Video Tanpa Ribet.' : 'Download Videos Without the Hassle.'}</h1>
+
+      <p>
+        {isID
+          ? 'UnduhAja adalah platform downloader video modern yang mendukung YouTube dan TikTok. Tempel URL, pilih kualitas, unduh. Cepat, gratis, tanpa iklan. Dibuat di Indonesia.'
+          : 'UnduhAja is a modern video downloader platform supporting YouTube and TikTok. Paste URL, pick quality, download. Fast, free, no ads. Made in Indonesia.'}
+      </p>
+
+      <a href={redirectUrl} class="redirect-link">
+        {isID ? 'Mulai Mengunduh' : 'Start Downloading'} →
+      </a>
+
+      <div class="lang-switch">
+        <a href="/id/">Bahasa Indonesia</a>
+        <a href="/en/">English</a>
+      </div>
+
+      <div class="purpose">
+        <h2>{isID ? 'Tentang UnduhAja' : 'About UnduhAja'}</h2>
+        <p>
+          {isID
+            ? 'UnduhAja adalah layanan web yang memungkinkan pengguna mengunduh video dari YouTube (termasuk YouTube Shorts) dan TikTok untuk konsumsi pribadi. Dirancang dengan fokus pada privasi pengguna — tanpa iklan, tanpa tracking, tanpa penyimpanan riwayat unduhan. Mendukung berbagai kualitas video (144p hingga 1080p60) dan format audio (MP3 320kbps, M4A).'
+            : 'UnduhAja is a web service that allows users to download videos from YouTube (including YouTube Shorts) and TikTok for personal consumption. Designed with a focus on user privacy — no ads, no tracking, no download history storage. Supports various video qualities (144p to 1080p60) and audio formats (MP3 320kbps, M4A).'}
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

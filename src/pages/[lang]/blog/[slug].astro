@@ -1,0 +1,797 @@
+---
+export const prerender = true;
+
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Header from '@/components/astro/Header.astro';
+import Footer from '@/components/astro/Footer.astro';
+import { type Lang, createTranslator, localizePath } from '@/i18n/utils';
+
+export function getStaticPaths() {
+  const slugs = [
+    // ID posts
+    { lang: 'id', slug: 'cara-unduh-video-youtube-1080p60' },
+    { lang: 'id', slug: 'tiktok-downloader-tanpa-watermark' },
+    { lang: 'id', slug: 'ekstrak-audio-mp3-dari-youtube' },
+    { lang: 'id', slug: 'privasi-downloader-video' },
+    // EN posts
+    { lang: 'en', slug: 'how-to-download-youtube-1080p60' },
+    { lang: 'en', slug: 'tiktok-downloader-without-watermark' },
+    { lang: 'en', slug: 'extract-mp3-audio-from-youtube' },
+    { lang: 'en', slug: 'privacy-video-downloader' },
+  ];
+  return slugs.map(({ lang, slug }) => ({ params: { lang, slug } }));
+}
+
+const { lang, slug } = Astro.params as { lang: Lang; slug: string };
+const t = createTranslator(lang);
+const isID = lang === 'id';
+
+// Blog post content database (in production, this would be MDX/Markdown content)
+const posts = {
+  id: {
+    'cara-unduh-video-youtube-1080p60': {
+      title: 'Cara Mengunduh Video YouTube 1080p60 dengan Kualitas Maksimal',
+      excerpt: 'Panduan lengkap mengunduh video YouTube kualitas Full HD 60fps menggunakan UnduhAja.',
+      date: '2025-07-10',
+      readingTime: '5 menit',
+      tag: 'Tutorial',
+      author: 'Albi Fahriza',
+      content: `YouTube menyediakan berbagai pilihan kualitas video, mulai dari 144p hingga 1080p60 (Full HD dengan 60 frame per detik). Namun, tidak semua orang tahu cara mengunduh video YouTube dengan kualitas maksimal tanpa kehilangan kualitas. Di panduan ini, gw akan jelasin step-by-step cara menggunakan UnduhAja untuk mengunduh video YouTube 1080p60.
+
+## Apa itu 1080p60?
+
+1080p60 berarti video dengan resolusi 1920x1080 pixel (Full HD) yang ditampilkan pada 60 frame per detik (fps). Ini berbeda dengan 1080p biasa yang hanya 30 fps. Untuk konten dengan banyak gerakan (gaming, olahraga, action), 60fps membuat tampilan jauh lebih smooth dan realistis.
+
+## Langkah 1: Salin URL Video YouTube
+
+Buka video YouTube yang ingin Anda unduh di browser atau app YouTube. Salin URL dari address bar browser (contoh: \`https://www.youtube.com/watch?v=dQw4w9WgXcQ\`). Anda juga bisa klik tombol Share di app YouTube lalu pilih Copy Link.
+
+## Langkah 2: Tempel URL di UnduhAja
+
+Buka https://unduhaja.vercel.app/id/. Di kotak input utama, tempelkan URL yang sudah Anda salin. Anda bisa:
+
+- Klik kanan → Paste, atau
+- Tekan Ctrl+V (Cmd+V di Mac) — input akan otomatis ter-focus
+- Klik tombol "Tempel" di sebelah kanan input
+- Drag link dari address bar browser langsung ke kotak input
+
+Setelah URL valid, UnduhAja akan otomatis melakukan scan (5-15 detik).
+
+## Langkah 3: Pilih Kualitas 1080p60
+
+Setelah preview card muncul, scroll ke bawah ke bagian "Kualitas". Klik dropdown, pilih tab "Video", lalu pilih **1080p60** (default). Jika kualitas ini tidak tersedia di video asli (misal video diupload dalam 720p), pilihan tersebut tidak akan muncul di dropdown.
+
+## Langkah 4: Klik Unduh Sekarang
+
+Klik tombol biru "Unduh Sekarang". File video akan otomatis terunduh ke folder Downloads browser Anda. Nama file akan mengikuti judul video asli (dengan sanitisasi karakter).
+
+## Tips Memilih Kualitas
+
+- **144p/240p/360p**: Untuk preview cepat atau koneksi lambat
+- **480p**: Standar SD, ukuran file kecil
+- **720p/720p60**: HD, balance antara kualitas dan ukuran
+- **1080p/1080p60**: Full HD, recommended untuk mayoritas kasus
+- **Audio MP3/M4A**: Kalau cuma butuh audio (musik, podcast)
+
+## Kesimpulan
+
+UnduhAja membuat proses download video YouTube jadi sangat mudah dan cepat. Dengan dukungan 1080p60, Anda bisa menikmati video dengan kualitas maksimal untuk pengalaman viewing terbaik. Selalu ingat untuk menghormati hak cipta dan hanya mengunduh untuk konsumsi pribadi.`,
+    },
+    'tiktok-downloader-tanpa-watermark': {
+      title: 'Cara Mengunduh Video TikTok Tanpa Watermark (Legal & Aman)',
+      excerpt: 'Pelajari cara mengunduh video TikTok tanpa watermark menggunakan UnduhAja.',
+      date: '2025-07-05',
+      readingTime: '4 menit',
+      tag: 'Tutorial',
+      author: 'Albi Fahriza',
+      content: `TikTok watermark (logo TikTok + username creator) bisa mengganggu estetika video saat ingin di-share ke platform lain atau disimpan sebagai koleksi pribadi. Di artikel ini, gw akan jelasin cara mengunduh video TikTok tanpa watermark menggunakan UnduhAja, plus etika dan batasan legal yang perlu Anda ketahui.
+
+## Apa itu Watermark TikTok?
+
+Watermark TikTok adalah overlay yang muncul di video saat diunduh langsung dari app TikTok. Overlay ini berisi logo TikTok dan username creator. Fungsinya untuk attribution dan mencegah konten dipakai tanpa kredit.
+
+## Cara Mengunduh Tanpa Watermark via UnduhAja
+
+### Langkah 1: Salin URL Video TikTok
+
+Buka video TikTok di app atau browser. Klik tombol Share → pilih Copy Link. URL akan berbentuk seperti \`https://www.tiktok.com/@username/video/1234567890\` atau \`https://vm.tiktok.com/abc123/\` (shortlink).
+
+### Langkah 2: Tempel di UnduhAja
+
+Buka https://unduhaja.vercel.app/id/, tempel URL TikTok di kotak input. UnduhAja otomatis detect bahwa ini URL TikTok dan akan fetch metadata (title, creator, music, duration, view count).
+
+### Langkah 3: Download
+
+Klik "Unduh Sekarang". File MP4 tanpa watermark akan terunduh ke browser.
+
+## Apakah Legal?
+
+Mengunduh video TikTok tanpa watermark untuk konsumsi pribadi (offline viewing) umumnya OK sesuai ToS TikTok. Namun:
+
+- **JANGAN** re-upload tanpa izin creator (pelanggaran hak cipta)
+- **JANGAN** gunakan untuk tujuan komersial tanpa lisensi
+- **SELALU** mention creator saat share ke platform lain (instagram reels, youtube shorts)
+
+## Etika
+
+Creator TikTok bergantung pada attribution untuk growth. Bahkan jika Anda mengunduh tanpa watermark, etisanya tetap mention sumber asli. Kalau Anda suka dengan kontennya, follow + like akun mereka di TikTok.
+
+## Kesimpulan
+
+UnduhAja mempermudah download video TikTok tanpa watermark dengan proses yang cepat dan tanpa iklan mengganggu. Gunakan dengan bijak dan hormati karya creator.`,
+    },
+    'ekstrak-audio-mp3-dari-youtube': {
+      title: 'Cara Ekstrak Audio MP3 320kbps dari Video YouTube',
+      excerpt: 'Tutorial ekstraksi audio berkualitas tinggi dari video YouTube.',
+      date: '2025-06-28',
+      readingTime: '6 menit',
+      tag: 'Audio',
+      author: 'Albi Fahriza',
+      content: `Pernah ingin menyimpan audio dari video YouTube sebagai MP3 untuk diputar offline? Entah itu musik, podcast, atau audiobook, mengkonversi video YouTube ke audio MP3 adalah kasus penggunaan yang umum. Di panduan ini, gw akan jelasin cara menggunakan UnduhAja untuk ekstrak audio MP3 320kbps dari video YouTube.
+
+## MP3 vs M4A: Apa Bedanya?
+
+Sebelum mulai, penting untuk paham format audio yang berbeda:
+
+### MP3 (MPEG-1 Audio Layer III)
+- Format audio paling universal (semua device support)
+- Lossy compression (ada kehilangan kualitas)
+- Max bitrate: 320 kbps
+- Cocok untuk: compatibility maximum
+
+### M4A (AAC)
+- Format Apple, lebih modern
+- Lebih efisien dari MP3 (kualitas lebih baik pada bitrate sama)
+- Max bitrate: 256 kbps AAC
+- Cocok untuk: Apple ecosystem (iPhone, Mac, iTunes)
+
+Untuk mayoritas user, MP3 320kbps adalah pilihan terbaik karena compatibility + kualitas tinggi.
+
+## Cara Ekstrak Audio via UnduhAja
+
+### Step 1: Salin URL Video YouTube
+
+Cari video YouTube yang ingin Anda ekstrak audionya (musik, podcast, talk show, dll). Salin URL-nya.
+
+### Step 2: Tempel di UnduhAja
+
+Buka https://unduhaja.vercel.app/id/, tempel URL di kotak input. Tunggu scan selesai (5-15 detik).
+
+### Step 3: Pilih Tab Audio
+
+Di bawah preview card, klik tab **Audio** di dropdown kualitas. Akan muncul 2 opsi:
+- **MP3** — 320 kbps (source max)
+- **M4A** — 256 kbps AAC
+
+Pilih **MP3** untuk compatibility maximum.
+
+### Step 4: Download
+
+Klik "Unduh Sekarang". File MP3 dengan bitrate maksimal akan terunduh.
+
+## Tips Memilih Video Source
+
+Kualitas audio hasil ekstrak sangat tergantung pada kualitas video asli:
+
+- Video musik official (VEVO, channel resmi) → biasanya audio 256-320kbps
+- Video podcast → biasanya audio 128-192kbps
+- Video voiceover/amateur → biasanya audio 64-128kbps
+
+UnduhAja akan otomatis pick bitrate tertinggi yang tersedia (max 320kbps).
+
+## Legalitas
+
+Ekstrak audio dari YouTube untuk konsumsi pribadi (offline listening) umumnya OK. Namun:
+
+- **JANGAN** distribusikan MP3 hasil ekstrak ke orang lain (pelanggaran hak cipta)
+- **JANGAN** gunakan untuk tujuan komersial (monetisasi YouTube, podcast, dll)
+- **PERTIMBANGKAN** subscription YouTube Premium untuk download official (lebih aman legally)
+
+## Kesimpulan
+
+Dengan UnduhAja, ekstrak audio MP3 320kbps dari YouTube jadi sangat mudah. Pilih format yang sesuai dengan device Anda (MP3 untuk universal, M4A untuk Apple ecosystem), dan selalu ingat untuk menghormati hak cipta creator.`,
+    },
+    'privasi-downloader-video': {
+      title: 'Privasi di Era Downloader Video: Apa yang Perlu Anda Tahu',
+      excerpt: 'Mengapa privasi penting saat menggunakan downloader video.',
+      date: '2025-06-20',
+      readingTime: '7 menit',
+      tag: 'Privasi',
+      author: 'Albi Fahriza',
+      content: `Di era digital, privasi pengguna sering kali dikorbankan untuk "fitur gratis". Banyak website downloader video yang mengumpulkan data pengguna — URL yang diunduh, IP address, browser fingerprint, behavior pattern — lalu menjualnya ke advertiser atau pihak ketiga. Di artikel ini, gw akan jelasin kenapa privasi penting dan bagaimana UnduhAja melindungi data Anda.
+
+## Kenapa Privasi Itu Penting?
+
+### 1. URL yang Anda Unduh = Data Sensitif
+
+URL video yang Anda unduh bisa mengungkap banyak hal tentang Anda:
+- Preferensi politik (video kampanye)
+- Kondisi kesehatan (video medis)
+- Seksualitas (video LGBT+)
+- Aktivitas keuangan (video investasi)
+- Hobi dan minat pribadi
+
+Bayangkan kalau data ini jatuh ke tangan advertiser, asuransi, atau calon employer. Bisa berdampak serius.
+
+### 2. Tracking Cross-Website
+
+Banyak website downloader menggunakan tracking pixel (Facebook Pixel, Google Analytics) yang share data URL yang Anda download ke platform advertising. Setelah itu, Anda akan mulai melihat iklan terkait video yang Anda unduh di seluruh internet.
+
+### 3. Risk Data Breach
+
+Website downloader yang menyimpan log URL rentan terhadap data breach. Kalau database mereka bocor, riwayat unduhan Anda bisa expose ke publik atau dijual di dark web.
+
+## Bagaimana UnduhAja Melindungi Privasi Anda
+
+### 1. No URL Storage
+
+URL yang Anda tempelkan ke UnduhAja diproses secara on-the-fly:
+- User paste URL → server fetch metadata → kirim ke browser → hapus dari memory
+
+Tidak ada log URL, tidak ada database yang menyimpan URL, tidak ada backup yang menyimpan jejak aktivitas Anda.
+
+### 2. No Analytics
+
+UnduhAja v1.0.0 TIDAK menggunakan:
+- Google Analytics
+- Facebook Pixel
+- Vercel Analytics
+- Hotjar
+- Sentry user tracking
+- Service analytics apapun
+
+Satu-satunya data yang kami simpan adalah download stats anonymous (platform, format, success/fail) — tanpa URL, tanpa IP, tanpa user identifier yang bisa di-link ke akun.
+
+### 3. No Cookies Tracking
+
+Cookie yang kami pakai hanya:
+- \`unduhaja-theme\` — preferensi tema (light/dark) di localStorage
+- \`sb-access-token\` + \`sb-refresh-token\` — session auth Supabase (httpOnly, secure)
+
+Tidak ada cookie tracking, tidak ada third-party cookies, tidak ada fingerprinting.
+
+### 4. Privacy-First Architecture
+
+UnduhAja dirancang dari awal dengan prinsip privacy-first:
+- **No download history** — bahkan untuk user yang login
+- **No URL logs** — bahkan untuk debugging
+- **Anonymous download stats** — hanya metadata (platform, format), tanpa URL atau user identifier
+- **Auto-cleanup** — Postgres cron job hapus data download_stats > 90 hari
+
+## Cara Verifikasi Sendiri
+
+Anda bisa verify klaim privasi kami sendiri:
+
+### 1. Cek Network Requests
+Buka Developer Tools browser → tab Network → lakukan download. Anda akan lihat request hanya ke:
+- \`unduhaja.vercel.app\` (frontend)
+- \`YOUR_PROJECT.supabase.co\` (auth + API)
+- \`unduhaja-api.unduhaja.workers.dev\` (yt-dlp alternative)
+
+Tidak ada request ke Google Analytics, Facebook, atau tracker lain.
+
+### 2. Cek Cookies
+Developer Tools → Application → Cookies → \`unduhaja.vercel.app\`. Hanya ada 2-3 cookies (theme + auth session).
+
+### 3. Baca Privacy Policy
+Kunjungi https://unduhaja.vercel.app/id/privacy untuk detail lengkap tentang data handling.
+
+## Kesimpulan
+
+Privasi adalah hak, bukan fitur premium. UnduhAja dibangun dengan filosofi privacy-first — semua fitur gratis, tanpa tracking, tanpa iklan, tanpa data selling. Pilih platform yang menghormati privasi Anda.`,
+    },
+  },
+  en: {
+    'how-to-download-youtube-1080p60': {
+      title: 'How to Download YouTube Videos at 1080p60 with Maximum Quality',
+      excerpt: 'Complete guide to downloading YouTube videos in Full HD 60fps using UnduhAja.',
+      date: '2025-07-10',
+      readingTime: '5 min',
+      tag: 'Tutorial',
+      author: 'Albi Fahriza',
+      content: `YouTube provides various video quality options, from 144p to 1080p60 (Full HD at 60 frames per second). However, not everyone knows how to download YouTube videos at maximum quality without losing fidelity. In this guide, I'll explain step-by-step how to use UnduhAja to download 1080p60 YouTube videos.
+
+## What is 1080p60?
+
+1080p60 means video with 1920x1080 pixel resolution (Full HD) displayed at 60 frames per second (fps). This differs from standard 1080p which is only 30 fps. For content with lots of motion (gaming, sports, action), 60fps makes the display much smoother and more realistic.
+
+## Step 1: Copy YouTube Video URL
+
+Open the YouTube video you want to download in your browser or YouTube app. Copy the URL from the browser address bar (example: \`https://www.youtube.com/watch?v=dQw4w9WgXcQ\`). You can also click the Share button in the YouTube app then select Copy Link.
+
+## Step 2: Paste URL in UnduhAja
+
+Open https://unduhaja.vercel.app/en/. In the main input box, paste the URL you copied. You can:
+
+- Right-click → Paste, or
+- Press Ctrl+V (Cmd+V on Mac) — input will auto-focus
+- Click the "Paste" button next to the input
+- Drag a link from browser address bar directly into the input box
+
+After URL is valid, UnduhAja will automatically scan (5-15 seconds).
+
+## Step 3: Select 1080p60 Quality
+
+After preview card appears, scroll down to the "Quality" section. Click the dropdown, select the "Video" tab, then choose **1080p60** (default). If this quality is not available in the original video (e.g., video was uploaded in 720p), that option won't appear in the dropdown.
+
+## Step 4: Click Download Now
+
+Click the blue "Download Now" button. The video file will automatically download to your browser's Downloads folder. The filename will follow the original video title (with character sanitization).
+
+## Tips for Choosing Quality
+
+- **144p/240p/360p**: For quick preview or slow connection
+- **480p**: Standard SD, small file size
+- **720p/720p60**: HD, balance between quality and size
+- **1080p/1080p60**: Full HD, recommended for most use cases
+- **Audio MP3/M4A**: If you only need audio (music, podcast)
+
+## Conclusion
+
+UnduhAja makes downloading YouTube videos very easy and fast. With 1080p60 support, you can enjoy videos at maximum quality for the best viewing experience. Always remember to respect copyright and only download for personal consumption.`,
+    },
+    'tiktok-downloader-without-watermark': {
+      title: 'How to Download TikTok Videos Without Watermark (Legal & Safe)',
+      excerpt: 'Learn how to download TikTok videos without watermark using UnduhAja.',
+      date: '2025-07-05',
+      readingTime: '4 min',
+      tag: 'Tutorial',
+      author: 'Albi Fahriza',
+      content: `TikTok watermark (TikTok logo + creator username) can disrupt video aesthetics when wanting to share to other platforms or save as personal collection. In this article, I'll explain how to download TikTok videos without watermark using UnduhAja, plus ethics and legal limitations you need to know.
+
+## What is TikTok Watermark?
+
+TikTok watermark is an overlay that appears on video when downloaded directly from the TikTok app. This overlay contains the TikTok logo and creator username. Its function is attribution and preventing content use without credit.
+
+## How to Download Without Watermark via UnduhAja
+
+### Step 1: Copy TikTok Video URL
+
+Open the TikTok video in app or browser. Click Share button → select Copy Link. URL will look like \`https://www.tiktok.com/@username/video/1234567890\` or \`https://vm.tiktok.com/abc123/\` (shortlink).
+
+### Step 2: Paste in UnduhAja
+
+Open https://unduhaja.vercel.app/en/, paste TikTok URL in input box. UnduhAja automatically detects this is a TikTok URL and will fetch metadata (title, creator, music, duration, view count).
+
+### Step 3: Download
+
+Click "Download Now". MP4 file without watermark will download to your browser.
+
+## Is it Legal?
+
+Downloading TikTok videos without watermark for personal consumption (offline viewing) is generally OK per TikTok ToS. However:
+
+- **DO NOT** re-upload without creator permission (copyright infringement)
+- **DO NOT** use for commercial purposes without license
+- **ALWAYS** mention creator when sharing to other platforms (Instagram Reels, YouTube Shorts)
+
+## Ethics
+
+TikTok creators depend on attribution for growth. Even if you download without watermark, ethically you should still mention the original source. If you like their content, follow + like their TikTok account.
+
+## Conclusion
+
+UnduhAja simplifies downloading TikTok videos without watermark with a fast process and no annoying ads. Use wisely and respect creator work.`,
+    },
+    'extract-mp3-audio-from-youtube': {
+      title: 'How to Extract 320kbps MP3 Audio from YouTube Videos',
+      excerpt: 'Tutorial for high-quality audio extraction from YouTube videos.',
+      date: '2025-06-28',
+      readingTime: '6 min',
+      tag: 'Audio',
+      author: 'Albi Fahriza',
+      content: `Ever wanted to save audio from YouTube videos as MP3 for offline playback? Whether it's music, podcasts, or audiobooks, converting YouTube videos to MP3 audio is a common use case. In this guide, I'll explain how to use UnduhAja to extract 320kbps MP3 audio from YouTube videos.
+
+## MP3 vs M4A: What's the Difference?
+
+Before starting, it's important to understand different audio formats:
+
+### MP3 (MPEG-1 Audio Layer III)
+- Most universal audio format (all devices support)
+- Lossy compression (some quality loss)
+- Max bitrate: 320 kbps
+- Best for: maximum compatibility
+
+### M4A (AAC)
+- Apple format, more modern
+- More efficient than MP3 (better quality at same bitrate)
+- Max bitrate: 256 kbps AAC
+- Best for: Apple ecosystem (iPhone, Mac, iTunes)
+
+For most users, MP3 320kbps is the best choice due to compatibility + high quality.
+
+## How to Extract Audio via UnduhAja
+
+### Step 1: Copy YouTube Video URL
+
+Find a YouTube video you want to extract audio from (music, podcast, talk show, etc). Copy its URL.
+
+### Step 2: Paste in UnduhAja
+
+Open https://unduhaja.vercel.app/en/, paste URL in input box. Wait for scan to complete (5-15 seconds).
+
+### Step 3: Select Audio Tab
+
+Below the preview card, click the **Audio** tab in the quality dropdown. Two options will appear:
+- **MP3** — 320 kbps (source max)
+- **M4A** — 256 kbps AAC
+
+Choose **MP3** for maximum compatibility.
+
+### Step 4: Download
+
+Click "Download Now". MP3 file with maximum bitrate will download.
+
+## Tips for Choosing Source Video
+
+Audio extraction quality depends heavily on the original video quality:
+
+- Official music videos (VEVO, official channels) → usually 256-320kbps audio
+- Podcast videos → usually 128-192kbps audio
+- Voiceover/amateur videos → usually 64-128kbps audio
+
+UnduhAja will automatically pick the highest available bitrate (max 320kbps).
+
+## Legality
+
+Extracting audio from YouTube for personal consumption (offline listening) is generally OK. However:
+
+- **DO NOT** distribute extracted MP3 to others (copyright infringement)
+- **DO NOT** use for commercial purposes (YouTube monetization, podcast, etc)
+- **CONSIDER** YouTube Premium subscription for official downloads (legally safer)
+
+## Conclusion
+
+With UnduhAja, extracting 320kbps MP3 audio from YouTube is very easy. Choose the format that suits your device (MP3 for universal, M4A for Apple ecosystem), and always remember to respect creator copyright.`,
+    },
+    'privacy-video-downloader': {
+      title: 'Privacy in the Video Downloader Era: What You Need to Know',
+      excerpt: 'Why privacy matters when using video downloaders.',
+      date: '2025-06-20',
+      readingTime: '7 min',
+      tag: 'Privacy',
+      author: 'Albi Fahriza',
+      content: `In the digital age, user privacy is often sacrificed for "free features". Many video downloader websites collect user data — downloaded URLs, IP addresses, browser fingerprints, behavior patterns — then sell it to advertisers or third parties. In this article, I'll explain why privacy matters and how UnduhAja protects your data.
+
+## Why Privacy Matters?
+
+### 1. URLs You Download = Sensitive Data
+
+Video URLs you download can reveal a lot about you:
+- Political preferences (campaign videos)
+- Health conditions (medical videos)
+- Sexuality (LGBT+ content)
+- Financial activities (investment videos)
+- Personal hobbies and interests
+
+Imagine if this data falls into the hands of advertisers, insurance companies, or potential employers. Could have serious consequences.
+
+### 2. Cross-Website Tracking
+
+Many downloader websites use tracking pixels (Facebook Pixel, Google Analytics) that share URL data with advertising platforms. After that, you'll start seeing ads related to videos you downloaded across the internet.
+
+### 3. Data Breach Risk
+
+Downloader websites that store URL logs are vulnerable to data breaches. If their database leaks, your download history could be exposed publicly or sold on dark web.
+
+## How UnduhAja Protects Your Privacy
+
+### 1. No URL Storage
+
+URLs you paste into UnduhAja are processed on-the-fly:
+- User pastes URL → server fetches metadata → sends to browser → deletes from memory
+
+No URL logs, no database storing URLs, no backups containing traces of your activity.
+
+### 2. No Analytics
+
+UnduhAja v1.0.0 does NOT use:
+- Google Analytics
+- Facebook Pixel
+- Vercel Analytics
+- Hotjar
+- Sentry user tracking
+- Any service analytics
+
+The only data we store is anonymous download stats (platform, format, success/fail) — without URLs, without IPs, without user identifiers that can be linked to accounts.
+
+### 3. No Tracking Cookies
+
+Cookies we use are only:
+- \`unduhaja-theme\` — theme preference (light/dark) in localStorage
+- \`sb-access-token\` + \`sb-refresh-token\` — Supabase auth session (httpOnly, secure)
+
+No tracking cookies, no third-party cookies, no fingerprinting.
+
+### 4. Privacy-First Architecture
+
+UnduhAja is designed from the start with privacy-first principles:
+- **No download history** — even for logged-in users
+- **No URL logs** — even for debugging
+- **Anonymous download stats** — only metadata (platform, format), without URLs or user identifiers
+- **Auto-cleanup** — Postgres cron job deletes download_stats > 90 days
+
+## How to Verify Yourself
+
+You can verify our privacy claims yourself:
+
+### 1. Check Network Requests
+Open browser Developer Tools → Network tab → perform a download. You'll see requests only to:
+- \`unduhaja.vercel.app\` (frontend)
+- \`YOUR_PROJECT.supabase.co\` (auth + API)
+- \`unduhaja-api.unduhaja.workers.dev\` (yt-dlp alternative)
+
+No requests to Google Analytics, Facebook, or other trackers.
+
+### 2. Check Cookies
+Developer Tools → Application → Cookies → \`unduhaja.vercel.app\`. Only 2-3 cookies (theme + auth session).
+
+### 3. Read Privacy Policy
+Visit https://unduhaja.vercel.app/en/privacy for complete details about data handling.
+
+## Conclusion
+
+Privacy is a right, not a premium feature. UnduhAja is built with privacy-first philosophy — all features free, no tracking, no ads, no data selling. Choose platforms that respect your privacy.`,
+    },
+  },
+};
+
+const post = posts[lang]?.[slug];
+
+if (!post) {
+  return Astro.redirect(localizePath(lang, '/blog'));
+}
+
+// Convert simple markdown-like syntax to HTML
+function renderContent(content: string): string {
+  return content
+    // Headers
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    // Bold
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    // Inline code
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    // Lists
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>.*<\/li>\n?)+/g, (match) => `<ul>${match}</ul>`)
+    // Paragraphs
+    .split(/\n\n+/)
+    .map(block => {
+      if (block.startsWith('<h2>') || block.startsWith('<h3>') || block.startsWith('<ul>')) {
+        return block;
+      }
+      return `<p>${block.trim().replace(/\n/g, '<br>')}</p>`;
+    })
+    .join('\n');
+}
+
+const renderedContent = renderContent(post.content);
+const blogPostSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.title,
+  description: post.excerpt,
+  datePublished: post.date,
+  author: { '@type': 'Person', name: post.author },
+  publisher: { '@type': 'Organization', name: 'UnduhAja' },
+};
+---
+
+<BaseLayout
+  title={`${post.title} — UnduhAja`}
+  description={post.excerpt}
+  lang={lang}
+>
+  <Header lang={lang} />
+
+  <main>
+    <article class="blog-post">
+      <div class="container container-narrow">
+        <a href={localizePath(lang, '/blog')} class="back-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="19" y1="12" x2="5" y2="12" />
+            <polyline points="12 19 5 12 12 5" />
+          </svg>
+          <span>{isID ? 'Kembali ke Blog' : 'Back to Blog'}</span>
+        </a>
+
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-tag">{post.tag}</span>
+            <span class="post-date">
+              {new Date(post.date).toLocaleDateString(isID ? 'id-ID' : 'en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })}
+            </span>
+            <span class="post-reading">{post.readingTime}</span>
+          </div>
+          <h1 class="post-title">{post.title}</h1>
+          <p class="post-excerpt">{post.excerpt}</p>
+          <div class="post-author">
+            <div class="post-author-avatar">AF</div>
+            <div>
+              <div class="post-author-name">{post.author}</div>
+              <div class="post-author-role">{isID ? 'Founder & Developer' : 'Founder & Developer'}</div>
+            </div>
+          </div>
+        </header>
+
+        <div class="post-content" set:html={renderedContent} />
+
+        <script type="application/ld+json" set:html={JSON.stringify(blogPostSchema)} />
+
+        <footer class="post-footer">
+          <div class="post-cta">
+            <h3>{isID ? 'Siap mencoba?' : 'Ready to try?'}</h3>
+            <p>{isID ? 'Tempel URL YouTube atau TikTok favorit Anda dan rasakan pengalaman downloader modern.' : 'Paste your favorite YouTube or TikTok URL and experience a modern downloader.'}</p>
+            <a href={localizePath(lang, '/')} class="btn-primary">
+              {isID ? 'Mulai Mengunduh' : 'Start Downloading'}
+            </a>
+          </div>
+        </footer>
+      </div>
+    </article>
+  </main>
+
+  <Footer lang={lang} />
+</BaseLayout>
+
+<style>
+  .blog-post { padding: var(--space-16) 0; }
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    margin-bottom: var(--space-8);
+    transition: color var(--duration-fast) ease;
+  }
+  .back-link:hover { color: var(--color-primary); }
+
+  .post-header { margin-bottom: var(--space-10); }
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+    flex-wrap: wrap;
+  }
+  .post-tag {
+    padding: 4px var(--space-2);
+    background: var(--color-primary-subtle);
+    color: var(--color-primary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    border-radius: var(--radius-sm);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+  .post-date, .post-reading {
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-sm);
+  }
+  .post-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text);
+    line-height: var(--line-height-tight);
+    margin: 0 0 var(--space-4);
+    letter-spacing: var(--tracking-tight);
+  }
+  .post-excerpt {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-relaxed);
+    margin: 0 0 var(--space-6);
+  }
+  .post-author {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4) 0;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .post-author-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-full);
+    background: var(--color-primary);
+    color: var(--color-text-inverse);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-sm);
+  }
+  .post-author-name {
+    color: var(--color-text);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-sm);
+  }
+  .post-author-role {
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
+  }
+
+  .post-content {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-loose);
+  }
+  .post-content :global(h2) {
+    color: var(--color-text);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    margin: var(--space-10) 0 var(--space-4);
+    line-height: var(--line-height-tight);
+  }
+  .post-content :global(h3) {
+    color: var(--color-text);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+    margin: var(--space-8) 0 var(--space-3);
+  }
+  .post-content :global(p) {
+    margin: 0 0 var(--space-4);
+  }
+  .post-content :global(ul) {
+    margin: 0 0 var(--space-4);
+    padding-left: var(--space-6);
+  }
+  .post-content :global(li) {
+    margin-bottom: var(--space-2);
+  }
+  .post-content :global(strong) {
+    color: var(--color-text);
+    font-weight: var(--font-weight-semibold);
+  }
+  .post-content :global(code) {
+    background: var(--color-surface-sunken);
+    padding: 2px var(--space-2);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    color: var(--color-text);
+  }
+
+  .post-footer { margin-top: var(--space-16); }
+  .post-cta {
+    padding: var(--space-10);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    text-align: center;
+  }
+  .post-cta h3 {
+    font-size: var(--font-size-xl);
+    color: var(--color-text);
+    margin: 0 0 var(--space-3);
+  }
+  .post-cta p {
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--space-6);
+  }
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-3) var(--space-6);
+    background: var(--color-primary);
+    color: var(--color-text-inverse);
+    text-decoration: none;
+    font-weight: var(--font-weight-semibold);
+    border-radius: var(--radius-md);
+    transition: all var(--duration-fast) ease;
+  }
+  .btn-primary:hover {
+    background: var(--color-primary-hover);
+    transform: translateY(-1px);
+  }
+</style>

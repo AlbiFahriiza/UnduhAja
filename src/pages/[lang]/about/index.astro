@@ -1,0 +1,195 @@
+---
+export const prerender = true;
+
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Header from '@/components/astro/Header.astro';
+import Footer from '@/components/astro/Footer.astro';
+import { type Lang, createTranslator, localizePath } from '@/i18n/utils';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'id' } },
+    { params: { lang: 'en' } },
+  ];
+}
+
+const { lang } = Astro.params as { lang: Lang };
+const t = createTranslator(lang);
+
+const isID = lang === 'id';
+---
+
+<BaseLayout
+  title={`${t('pages.about.title')} — UnduhAja`}
+  description={t('pages.about.subtitle')}
+  lang={lang}
+>
+  <Header lang={lang} />
+
+  <main>
+    <section class="page-header">
+      <div class="container">
+        <h1>{t('pages.about.title')}</h1>
+        <p class="subtitle">{t('pages.about.subtitle')}</p>
+      </div>
+    </section>
+
+    <section class="page-content">
+      <div class="container container-narrow">
+        <div class="prose">
+          <h2>{isID ? 'Apa itu UnduhAja?' : 'What is UnduhAja?'}</h2>
+          <p>
+            {isID
+              ? 'UnduhAja adalah tool downloader video modern yang dirancang khusus untuk pengguna Indonesia. Tool ini mendukung pengunduhan video dari YouTube (termasuk YouTube Shorts) dan TikTok dengan berbagai pilihan kualitas, mulai dari 144p hingga 1080p60, serta ekstraksi audio ke format MP3 dan M4A.'
+              : 'UnduhAja is a modern video downloader tool designed specifically for Indonesian users. It supports downloading videos from YouTube (including YouTube Shorts) and TikTok with various quality options, from 144p up to 1080p60, as well as audio extraction to MP3 and M4A formats.'}
+          </p>
+          <p>
+            {isID
+              ? 'Tool ini dibangun dengan filosofi "editorial minimalism" — antarmuka yang bersih, whitespace yang lapang, dan motion design berbasis spring physics yang membuat setiap interaksi terasa premium. Tujuannya sederhana: mengunduh video seharusnya tidak ribet, tidak dipenuhi iklan, dan tidak melanggar privasi pengguna.'
+              : 'This tool is built with "editorial minimalism" philosophy — clean interface, spacious whitespace, and spring physics-based motion design that makes every interaction feel premium. The goal is simple: downloading videos should not be complicated, should not be filled with ads, and should not violate user privacy.'}
+          </p>
+
+          <h2>{isID ? 'Bagaimana Cara Kerjanya?' : 'How Does It Work?'}</h2>
+          <p>
+            {isID
+              ? 'UnduhAja menggunakan yt-dlp sebagai engine downloader — sebuah tool open-source yang sudah teruji untuk menangani berbagai platform video. Saat Anda menempelkan URL, server kami memproses metadata video (judul, thumbnail, channel, durasi) dan menampilkannya dalam preview card. Setelah Anda memilih kualitas dan menekan tombol unduh, server men-stream file langsung ke browser Anda tanpa menyimpannya di disk.'
+              : 'UnduhAja uses yt-dlp as the downloader engine — a proven open-source tool for handling various video platforms. When you paste a URL, our server processes the video metadata (title, thumbnail, channel, duration) and displays it in a preview card. After you select quality and click download, the server streams the file directly to your browser without storing it on disk.'}
+          </p>
+          <p>
+            {isID
+              ? 'Semua komunikasi dienkripsi via HTTPS. URL yang Anda tempelkan tidak disimpan dalam database apapun. Setelah unduhan selesai, semua jejak URL dibersihkan dari memory server. Tidak ada tracking, tidak ada cookie, tidak ada analytics.'
+              : 'All communication is encrypted via HTTPS. URLs you paste are not stored in any database. After download completes, all traces of the URL are cleaned from server memory. No tracking, no cookies, no analytics.'}
+          </p>
+
+          <h2>{isID ? 'Teknologi di Baliknya' : 'Technology Behind It'}</h2>
+          <p>
+            {isID
+              ? 'UnduhAja dibangun di atas stack teknologi modern: Astro sebagai web framework (memungkinkan islands architecture untuk performance optimal), React untuk komponen interaktif, CSS Modules untuk styling yang scoped dan maintainable, serta custom RK4 analytical spring engine yang dibangun dari nol menggunakan Web Animations API. Backend di-hosting di Vercel dengan rate limiting via Upstash Redis dan autentikasi via Supabase.'
+              : 'UnduhAja is built on a modern technology stack: Astro as the web framework (enabling islands architecture for optimal performance), React for interactive components, CSS Modules for scoped and maintainable styling, and a custom RK4 analytical spring engine built from scratch using the Web Animations API. Backend is hosted on Vercel with rate limiting via Upstash Redis and authentication via Supabase.'}
+          </p>
+          <p>
+            {isID
+              ? 'Pilihan teknologi ini bukan kebetulan. Astro dipilih karena bundle JavaScript-nya sangat kecil (landing page mengirim ~0KB JS by default), yang menghasilkan Lighthouse score mendekati 100. Spring engine custom menggantikan Framer Motion untuk mengurangi ukuran bundle sambil tetap memberikan motion physics yang halus dan frame-rate independent.'
+              : 'These technology choices are not coincidental. Astro is chosen because its JavaScript bundle is very small (landing page sends ~0KB JS by default), resulting in Lighthouse scores approaching 100. The custom spring engine replaces Framer Motion to reduce bundle size while still providing smooth, frame-rate independent motion physics.'}
+          </p>
+
+          <h2>{isID ? 'Batasan dan Etika' : 'Limitations and Ethics'}</h2>
+          <p>
+            {isID
+              ? 'UnduhAja dirancang untuk penggunaan pribadi yang sah. Kami tidak mendukung pengunduhan video berhak cipta untuk distribusi ulang komersial. Video yang diprivasi, dihapus, atau memerlukan verifikasi usia tidak dapat diunduh. Live stream yang sedang berjalan juga tidak didukung — Anda harus menunggu hingga video diarsipkan oleh platform.'
+              : 'UnduhAja is designed for legitimate personal use. We do not support downloading copyrighted videos for commercial redistribution. Private, deleted, or age-restricted videos cannot be downloaded. Live streams in progress are also not supported — you must wait until the video is archived by the platform.'}
+          </p>
+          <p>
+            {isID
+              ? 'Jika Anda adalah pemilik konten dan merasa video Anda diunduh tanpa izin melalui UnduhAja, mohon hubungi kami melalui halaman DMCA. Kami akan menanggapi laporan dengan prioritas tinggi sesuai ketentuan Digital Millennium Copyright Act.'
+              : 'If you are a content owner and feel your video was downloaded without permission via UnduhAja, please contact us through the DMCA page. We will respond to reports with high priority in accordance with the Digital Millennium Copyright Act.'}
+          </p>
+
+          <h2>{isID ? 'Penulis' : 'Author'}</h2>
+          <p>
+            {isID
+              ? 'UnduhAja v1.0.0 dikembangkan oleh Albi Fahriza. Tool ini diluncurkan pada tahun 2025 sebagai jawaban atas frustrasi terhadap downloader-downloader Indonesia yang penuh iklan popup, redirect mencurigakan, dan antarmuka yang terasa seperti tahun 2005.'
+              : 'UnduhAja v1.0.0 is developed by Albi Fahriza. The tool was launched in 2025 as an answer to frustration with Indonesian downloaders full of popup ads, suspicious redirects, and interfaces that feel like they are from 2005.'}
+          </p>
+
+          <div class="cta-box">
+            <h3>{isID ? 'Siap mencoba?' : 'Ready to try?'}</h3>
+            <p>
+              {isID
+                ? 'Tempel URL YouTube atau TikTok favorit Anda dan rasakan sendiri pengalaman downloader yang modern.'
+                : 'Paste your favorite YouTube or TikTok URL and experience a modern downloader for yourself.'}
+            </p>
+            <a href={localizePath(lang, '/')} class="btn-primary">
+              {isID ? 'Mulai Mengunduh' : 'Start Downloading'}
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer lang={lang} />
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding: var(--space-20) 0 var(--space-12);
+    background:
+      radial-gradient(ellipse at top, var(--color-primary-subtle) 0%, transparent 60%),
+      var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    text-align: center;
+  }
+
+  .page-header h1 {
+    margin: 0 0 var(--space-4);
+  }
+
+  .subtitle {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-lg);
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .page-content {
+    padding: var(--space-16) 0;
+  }
+
+  .prose h2 {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    margin-top: var(--space-12);
+    margin-bottom: var(--space-4);
+    color: var(--color-text);
+  }
+
+  .prose h2:first-child {
+    margin-top: 0;
+  }
+
+  .prose p {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-relaxed);
+    margin-bottom: var(--space-4);
+  }
+
+  .cta-box {
+    margin-top: var(--space-16);
+    padding: var(--space-10);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    text-align: center;
+  }
+
+  .cta-box h3 {
+    font-size: var(--font-size-xl);
+    color: var(--color-text);
+    margin: 0 0 var(--space-3);
+  }
+
+  .cta-box p {
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--space-6);
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-3) var(--space-6);
+    background: var(--color-primary);
+    color: var(--color-text-inverse);
+    text-decoration: none;
+    font-weight: var(--font-weight-semibold);
+    border-radius: var(--radius-md);
+    transition: background-color var(--duration-fast) ease, transform var(--duration-fast) ease;
+  }
+
+  .btn-primary:hover {
+    background: var(--color-primary-hover);
+    transform: translateY(-1px);
+  }
+</style>

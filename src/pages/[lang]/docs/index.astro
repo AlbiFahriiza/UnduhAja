@@ -1,0 +1,227 @@
+---
+export const prerender = true;
+
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Header from '@/components/astro/Header.astro';
+import Footer from '@/components/astro/Footer.astro';
+import { type Lang, createTranslator, localizePath } from '@/i18n/utils';
+
+export function getStaticPaths() {
+  return [{ params: { lang: 'id' } }, { params: { lang: 'en' } }];
+}
+
+const { lang } = Astro.params as { lang: Lang };
+const t = createTranslator(lang);
+const isID = lang === 'id';
+
+const sections = isID ? [
+  {
+    title: 'Memulai',
+    items: [
+      { title: 'Apa itu UnduhAja?', content: 'UnduhAja adalah platform downloader video modern yang mendukung YouTube dan TikTok. Dirancang dengan fokus pada kecepatan, privasi, dan pengalaman pengguna kelas enterprise. Anda cukup menempelkan URL video, memilih kualitas, dan mengunduh — tanpa ribet, tanpa iklan mengganggu.' },
+      { title: 'Platform yang didukung', content: 'Saat ini UnduhAja mendukung YouTube (termasuk YouTube Shorts) dan TikTok. Kami terus mengevaluasi platform lain untuk ditambahkan di versi mendatang. Jika Anda ingin platform tertentu ditambahkan, hubungi kami melalui email.' },
+      { title: 'Apakah gratis?', content: 'Ya, UnduhAja sepenuhnya gratis untuk penggunaan pribadi. Mode tamu mendapatkan 5 unduhan per jam. Jika Anda membuat akun gratis, batasnya naik menjadi 50 unduhan per jam. Tidak ada fitur berbayar di v1.0.0.' },
+      { title: 'Apakah perlu daftar akun?', content: 'Tidak. Anda bisa menggunakan UnduhAja sebagai tamu (guest) tanpa daftar. Tapi dengan akun, Anda mendapat batas unduhan lebih tinggi (50/jam vs 5/jam guest) dan bisa sync preferensi antar perangkat.' },
+    ],
+  },
+  {
+    title: 'Cara Mengunduh',
+    items: [
+      { title: 'Langkah 1: Tempel URL', content: 'Salin URL video dari YouTube atau TikTok (dari address bar browser atau tombol Share di app), lalu tempelkan ke kotak input di halaman utama. Anda juga bisa klik tombol "Tempel" untuk otomatis baca clipboard, atau seret (drag) link langsung ke kotak input.' },
+      { title: 'Langkah 2: Tunggu Scan', content: 'Setelah URL valid, UnduhAja otomatis melakukan scan (5-15 detik). Anda akan melihat preview card berisi thumbnail, judul, channel, durasi, jumlah view, dan deskripsi video.' },
+      { title: 'Langkah 3: Pilih Kualitas', content: 'Di bawah preview card, klik dropdown "Kualitas". Pilih kualitas video yang diinginkan (144p, 240p, 360p, 480p, 720p, 720p60, 1080p, 1080p60) atau format audio (MP3 320kbps, M4A 256kbps AAC). Default: 1080p60.' },
+      { title: 'Langkah 4: Klik Download', content: 'Klik tombol "Unduh Sekarang". File akan otomatis terunduh ke folder Downloads browser Anda. Jika setelah 8 detik download belum dimulai, tombol "Unduh manual" akan muncul sebagai fallback.' },
+      { title: 'Tips: Keyboard Shortcut', content: 'Tekan Ctrl+V (atau Cmd+V di Mac) dari mana saja di halaman untuk langsung fokus ke input box dengan URL ter-paste. Tidak perlu klik kotak input dulu.' },
+    ],
+  },
+  {
+    title: 'Auth & Akun',
+    items: [
+      { title: 'Cara Daftar', content: 'Klik tombol "Masuk" di header → pilih tab "Daftar" → masukkan email + password (min 8 karakter) → selesaikan verifikasi Cloudflare Turnstile → klik "Buat Akun". Email verifikasi akan dikirim ke inbox Anda. Klik link di email untuk mengaktifkan akun.' },
+      { title: 'Login dengan Google', content: 'Klik "Masuk" → "Lanjutkan dengan Google". Browser akan redirect ke Google consent screen. Pilih akun Google → klik "Allow". Setelah Google redirect balik ke UnduhAja, Anda akan otomatis login.' },
+      { title: 'Lupa Password', content: 'Klik "Masuk" → "Lupa kata sandi?" → masukkan email → klik "Kirim Link Reset". Email berisi magic link akan dikirim. Klik link di email, Anda akan diarahkan ke halaman reset password. Masukkan password baru, selesai.' },
+    ],
+  },
+  {
+    title: 'Privasi & Keamanan',
+    items: [
+      { title: 'Apakah URL saya disimpan?', content: 'Tidak. URL yang Anda tempelkan diproses langsung oleh server (Cloudflare Worker untuk metadata, lalu stream ke browser) dan langsung dibuang setelah unduhan selesai. Tidak ada log URL, tidak ada riwayat download, tidak ada database yang menyimpan URL.' },
+      { title: 'Apakah ada tracking?', content: 'Tidak. UnduhAja v1.0.0 TIDAK menggunakan Google Analytics, Facebook Pixel, Vercel Analytics, atau analytics pihak ketiga apapun. Privasi Anda adalah prioritas utama kami.' },
+      { title: 'Anti-abuse protection', content: 'UnduhAja menerapkan 5-layer defense: (1) Supabase Auth built-in (brute force protection), (2) Cloudflare Turnstile captcha di signup/signin, (3) Rate limiting per IP/user (5/jam guest, 50/jam auth), (4) URL validation (reject playlist, live, age-restricted), (5) Honeypot field + IP blacklist.' },
+    ],
+  },
+] : [
+  {
+    title: 'Getting Started',
+    items: [
+      { title: 'What is UnduhAja?', content: 'UnduhAja is a modern video downloader platform supporting YouTube and TikTok. Designed with focus on speed, privacy, and enterprise-grade user experience. Just paste a video URL, select quality, and download — no hassle, no annoying ads.' },
+      { title: 'Supported platforms', content: 'Currently UnduhAja supports YouTube (including YouTube Shorts) and TikTok. We are continuously evaluating other platforms for future versions. To request a platform, contact us via email.' },
+      { title: 'Is it free?', content: 'Yes, UnduhAja is completely free for personal use. Guest mode gets 5 downloads per hour. If you create a free account, the limit increases to 50 downloads per hour. No paid features in v1.0.0.' },
+      { title: 'Do I need an account?', content: 'No. You can use UnduhAja as a guest without registering. But with an account, you get higher download limits (50/hr vs 5/hr guest) and can sync preferences across devices.' },
+    ],
+  },
+  {
+    title: 'How to Download',
+    items: [
+      { title: 'Step 1: Paste URL', content: 'Copy the video URL from YouTube or TikTok (from browser address bar or Share button in app), then paste it into the input box on the homepage. You can also click the "Paste" button to auto-read clipboard, or drag a link directly into the input box.' },
+      { title: 'Step 2: Wait for Scan', content: 'After URL is valid, UnduhAja automatically scans (5-15 seconds). You will see a preview card with thumbnail, title, channel, duration, view count, and video description.' },
+      { title: 'Step 3: Select Quality', content: 'Below the preview card, click the "Quality" dropdown. Select desired video quality (144p, 240p, 360p, 480p, 720p, 720p60, 1080p, 1080p60) or audio format (MP3 320kbps, M4A 256kbps AAC). Default: 1080p60.' },
+      { title: 'Step 4: Click Download', content: 'Click the "Download Now" button. File will automatically download to your browser\'s Downloads folder. If after 8 seconds download hasn\'t started, a "Manual download" button appears as fallback.' },
+      { title: 'Tip: Keyboard Shortcut', content: 'Press Ctrl+V (or Cmd+V on Mac) from anywhere on the page to instantly focus the input box with URL pasted. No need to click the input first.' },
+    ],
+  },
+  {
+    title: 'Auth & Account',
+    items: [
+      { title: 'How to Register', content: 'Click the "Sign in" button in header → select "Sign up" tab → enter email + password (min 8 characters) → complete Cloudflare Turnstile verification → click "Create Account". Verification email will be sent to your inbox. Click link in email to activate account.' },
+      { title: 'Sign in with Google', content: 'Click "Sign in" → "Continue with Google". Browser will redirect to Google consent screen. Select Google account → click "Allow". After Google redirects back to UnduhAja, you will be automatically logged in.' },
+      { title: 'Forgot Password', content: 'Click "Sign in" → "Forgot password?" → enter email → click "Send Reset Link". Email with magic link will be sent. Click link in email, you will be redirected to reset password page. Enter new password, done.' },
+    ],
+  },
+  {
+    title: 'Privacy & Security',
+    items: [
+      { title: 'Are my URLs stored?', content: 'No. URLs you paste are processed directly by server (Cloudflare Worker for metadata, then streamed to browser) and discarded immediately after download completes. No URL logs, no download history, no database storing URLs.' },
+      { title: 'Is there tracking?', content: 'No. UnduhAja v1.0.0 does NOT use Google Analytics, Facebook Pixel, Vercel Analytics, or any third-party analytics. Your privacy is our top priority.' },
+      { title: 'Anti-abuse protection', content: 'UnduhAja implements 5-layer defense: (1) Supabase Auth built-in (brute force protection), (2) Cloudflare Turnstile captcha on signup/signin, (3) Rate limiting per IP/user (5/hr guest, 50/hr auth), (4) URL validation (reject playlist, live, age-restricted), (5) Honeypot field + IP blacklist.' },
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title={`${t('pages.docs.title')} — UnduhAja`}
+  description={t('pages.docs.subtitle')}
+  lang={lang}
+>
+  <Header lang={lang} />
+
+  <main>
+    <section class="page-header">
+      <div class="container">
+        <h1>{t('pages.docs.title')}</h1>
+        <p class="subtitle">{t('pages.docs.subtitle')}</p>
+      </div>
+    </section>
+
+    <section class="page-content">
+      <div class="container container-narrow">
+        <div class="docs-grid">
+          {sections.map((section) => (
+            <section class="doc-section">
+              <h2 class="doc-section__title">{section.title}</h2>
+              <div class="doc-items">
+                {section.items.map((item) => (
+                  <article class="doc-item">
+                    <h3 class="doc-item__title">{item.title}</h3>
+                    <p class="doc-item__content">{item.content}</p>
+                  </article>
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+
+        <div class="cta-box">
+          <h3>{isID ? 'Masih bingung?' : 'Still confused?'}</h3>
+          <p>{isID ? 'Cek FAQ atau langsung coba UnduhAja sekarang.' : 'Check FAQ or try UnduhAja now.'}</p>
+          <div class="cta-buttons">
+            <a href={localizePath(lang, '/faq')} class="btn-secondary">{isID ? 'Lihat FAQ' : 'View FAQ'}</a>
+            <a href={localizePath(lang, '/')} class="btn-primary">{isID ? 'Coba UnduhAja' : 'Try UnduhAja'}</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer lang={lang} />
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding: var(--space-20) 0 var(--space-12);
+    background: radial-gradient(ellipse at top, var(--color-primary-subtle) 0%, transparent 60%), var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    text-align: center;
+  }
+  .page-header h1 { margin: 0 0 var(--space-4); }
+  .subtitle {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-lg);
+    max-width: 560px;
+    margin: 0 auto;
+  }
+  .page-content { padding: var(--space-16) 0; }
+  .docs-grid { display: flex; flex-direction: column; gap: var(--space-12); }
+  .doc-section__title {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text);
+    margin: 0 0 var(--space-5);
+    padding-bottom: var(--space-3);
+    border-bottom: 2px solid var(--color-primary);
+  }
+  .doc-items { display: flex; flex-direction: column; gap: var(--space-5); }
+  .doc-item {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    transition: border-color var(--duration-fast) ease;
+  }
+  .doc-item:hover { border-color: var(--color-primary-border); }
+  .doc-item__title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+    margin: 0 0 var(--space-2);
+  }
+  .doc-item__content {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-relaxed);
+    margin: 0;
+  }
+  .cta-box {
+    margin-top: var(--space-16);
+    padding: var(--space-10);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    text-align: center;
+  }
+  .cta-box h3 {
+    font-size: var(--font-size-xl);
+    color: var(--color-text);
+    margin: 0 0 var(--space-3);
+  }
+  .cta-box p { color: var(--color-text-secondary); margin: 0 0 var(--space-6); }
+  .cta-buttons { display: flex; gap: var(--space-3); justify-content: center; flex-wrap: wrap; }
+  .btn-primary, .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-3) var(--space-6);
+    text-decoration: none;
+    font-weight: var(--font-weight-semibold);
+    border-radius: var(--radius-md);
+    transition: all var(--duration-fast) ease;
+  }
+  .btn-primary {
+    background: var(--color-primary);
+    color: var(--color-text-inverse);
+  }
+  .btn-primary:hover {
+    background: var(--color-primary-hover);
+    transform: translateY(-1px);
+  }
+  .btn-secondary {
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+  }
+  .btn-secondary:hover {
+    border-color: var(--color-primary-border);
+    background: var(--color-surface-sunken);
+  }
+</style>

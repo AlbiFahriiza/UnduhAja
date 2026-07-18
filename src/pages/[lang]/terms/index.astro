@@ -1,0 +1,214 @@
+---
+export const prerender = true;
+
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Header from '@/components/astro/Header.astro';
+import Footer from '@/components/astro/Footer.astro';
+import { type Lang, createTranslator } from '@/i18n/utils';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'id' } },
+    { params: { lang: 'en' } },
+  ];
+}
+
+const { lang } = Astro.params as { lang: Lang };
+const t = createTranslator(lang);
+const isID = lang === 'id';
+
+const lastUpdated = '17 Juli 2025';
+---
+
+<BaseLayout
+  title={`${t('pages.terms.title')} — UnduhAja`}
+  description={t('pages.terms.subtitle')}
+  lang={lang}
+>
+  <Header lang={lang} />
+
+  <main>
+    <section class="page-header">
+      <div class="container">
+        <h1>{t('pages.terms.title')}</h1>
+        <p class="subtitle">{t('pages.terms.subtitle')}</p>
+        <p class="updated">{isID ? 'Terakhir diperbarui:' : 'Last updated:'} {lastUpdated}</p>
+      </div>
+    </section>
+
+    <section class="page-content">
+      <div class="container container-narrow">
+        <div class="prose">
+          <h2>{isID ? '1. Penerimaan Ketentuan' : '1. Acceptance of Terms'}</h2>
+          <p>
+            {isID
+              ? 'Dengan mengakses atau menggunakan UnduhAja ("Layanan"), Anda menyetujui untuk terikat oleh Ketentuan Layanan ini. Jika Anda tidak menyetujui ketentuan ini, mohon jangan menggunakan Layanan.'
+              : 'By accessing or using UnduhAja ("the Service"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Service.'}
+          </p>
+
+          <h2>{isID ? '2. Deskripsi Layanan' : '2. Description of Service'}</h2>
+          <p>
+            {isID
+              ? 'UnduhAja adalah tool downloader video yang memungkinkan pengguna mengunduh video dari YouTube dan TikTok untuk penggunaan pribadi. Layanan mencakup ekstraksi metadata video, preview, dan streaming file ke browser pengguna.'
+              : 'UnduhAja is a video downloader tool that allows users to download videos from YouTube and TikTok for personal use. The service includes video metadata extraction, preview, and file streaming to the user browser.'}
+          </p>
+
+          <h2>{isID ? '3. Penggunaan yang Diperbolehkan' : '3. Permitted Use'}</h2>
+          <p>{isID ? 'Anda diperbolehkan:' : 'You may:'}</p>
+          <ul>
+            <li>{isID ? 'Mengunduh video untuk konsumsi pribadi offline' : 'Download videos for personal offline consumption'}</li>
+            <li>{isID ? 'Mengunduh video Anda sendiri yang Anda unggah ke YouTube/TikTok' : 'Download your own videos that you uploaded to YouTube/TikTok'}</li>
+            <li>{isID ? 'Mengunduh video dengan lisensi Creative Commons atau domain publik' : 'Download videos with Creative Commons or public domain licenses'}</li>
+            <li>{isID ? 'Mengunduh untuk tujuan pendidikan dengan mencantumkan sumber' : 'Download for educational purposes with proper attribution'}</li>
+          </ul>
+
+          <h2>{isID ? '4. Penggunaan yang Dilarang' : '4. Prohibited Use'}</h2>
+          <p>{isID ? 'Anda TIDAK diperbolehkan:' : 'You may NOT:'}</p>
+          <ul>
+            <li>{isID ? 'Mengunduh video berhak cipta untuk distribusi ulang komersial' : 'Download copyrighted videos for commercial redistribution'}</li>
+            <li>{isID ? 'Mengunduh video untuk diunggah ulang ke platform lain tanpa izin' : 'Download videos to re-upload to other platforms without permission'}</li>
+            <li>{isID ? 'Menggunakan Layanan untuk pelanggaran hak cipta massal' : 'Use the Service for mass copyright infringement'}</li>
+            <li>{isID ? 'Mencoba menyalahgunakan, reverse engineer, atau mengganggu infrastruktur Layanan' : 'Attempt to abuse, reverse engineer, or disrupt the Service infrastructure'}</li>
+            <li>{isID ? 'Menggunakan bot, script, atau automated tool untuk melewati rate limit' : 'Use bots, scripts, or automated tools to bypass rate limits'}</li>
+            <li>{isID ? 'Mengunduh video private, deleted, atau age-restricted (akan otomatis ditolak)' : 'Download private, deleted, or age-restricted videos (will be automatically rejected)'}</li>
+            <li>{isID ? 'Menjual atau menyewakan akses ke akun Anda' : 'Sell or rent access to your account'}</li>
+          </ul>
+
+          <h2>{isID ? '5. Tanggung Jawab Pengguna' : '5. User Responsibility'}</h2>
+          <p>
+            {isID
+              ? 'Anda bertanggung jawab penuh atas video yang Anda unduh melalui UnduhAja. Anda wajib memastikan bahwa pengunduhan tersebut tidak melanggar hak cipta, merek dagang, atau hak kekayaan intelektual pihak lain. UnduhAja tidak bertanggung jawab atas penyalahgunaan Layanan oleh pengguna.'
+              : 'You are solely responsible for videos you download through UnduhAja. You must ensure that such downloads do not violate copyrights, trademarks, or intellectual property rights of others. UnduhAja is not responsible for user misuse of the Service.'}
+          </p>
+
+          <h2>{isID ? '6. Rate Limiting dan Anti-Abuse' : '6. Rate Limiting and Anti-Abuse'}</h2>
+          <p>
+            {isID
+              ? 'Untuk mencegah penyalahgunaan, UnduhAja menerapkan rate limiting: 5 unduhan/jam untuk pengguna tamu (guest) dan 50 unduhan/jam untuk pengguna terdaftar. Jika Anda melebihi batas ini, Anda akan melihat pesan error dan mungkin diminta menyelesaikan CAPTCHA Cloudflare Turnstile. Mencoba melewati rate limit dapat menyebabkan pemblokiran IP permanen.'
+              : 'To prevent abuse, UnduhAja enforces rate limiting: 5 downloads/hour for guest users and 50 downloads/hour for registered users. If you exceed these limits, you will see an error message and may be asked to solve a Cloudflare Turnstile CAPTCHA. Attempts to bypass rate limiting may result in permanent IP ban.'}
+          </p>
+
+          <h2>{isID ? '7. Akun Pengguna' : '7. User Accounts'}</h2>
+          <p>
+            {isID
+              ? 'Membuat akun bersifat opsional. Jika Anda membuat akun, Anda bertanggung jawab menjaga kerahasiaan kredensial Anda. Anda wajik memberikan informasi yang akurat saat mendaftar. Kami berhak menonaktifkan akun yang diduga dilanggar atau disalahgunakan.'
+              : 'Creating an account is optional. If you create an account, you are responsible for maintaining the confidentiality of your credentials. You must provide accurate information when registering. We reserve the right to disable accounts suspected of being compromised or abused.'}
+          </p>
+
+          <h2>{isID ? '8. Hak Kekayaan Intelektual' : '8. Intellectual Property Rights'}</h2>
+          <p>
+            {isID
+              ? 'UnduhAja (nama, logo, kode, desain) adalah milik Albi Fahriza. Video yang diunduh melalui Layanan tetap menjadi milik pencipta aslinya. UnduhAja tidak mengklaim kepemilikan atas video yang diunduh pengguna.'
+              : 'UnduhAja (name, logo, code, design) is owned by Albi Fahriza. Videos downloaded through the Service remain the property of their original creators. UnduhAja does not claim ownership of videos downloaded by users.'}
+          </p>
+
+          <h2>{isID ? '9. DMCA dan Hak Cipta' : '9. DMCA and Copyright'}</h2>
+          <p>
+            {isID
+              ? 'Jika Anda adalah pemilik hak cipta dan yakin video Anda diunduh tanpa izin melalui UnduhAja, kirim DMCA takedown notice ke dmca@unduhaja.vercel.app dengan informasi berikut: (a) identifikasi karya berhak cipta, (b) URL video di platform asli, (c) informasi kontak Anda, (d) pernyataan good faith, (e) tanda tangan fisik atau elektronik. Kami akan merespons dalam 72 jam.'
+              : 'If you are a copyright owner and believe your video was downloaded without permission via UnduhAja, send a DMCA takedown notice to dmca@unduhaja.vercel.app with: (a) identification of copyrighted work, (b) video URL on original platform, (c) your contact information, (d) good faith statement, (e) physical or electronic signature. We will respond within 72 hours.'}
+          </p>
+
+          <h2>{isID ? '10. Penolakan Jaminan' : '10. Disclaimer of Warranty'}</h2>
+          <p>
+            {isID
+              ? 'Layanan disediakan "sebagaimana adanya" tanpa jaminan apapun. Kami tidak menjamin bahwa setiap video dapat diunduh (platform dapat memblokir akses sewaktu-waktu). Kami tidak menjamin ketersediaan layanan 24/7. Kualitas video tergantung pada sumber aslinya.'
+              : 'The Service is provided "as is" without warranty of any kind. We do not guarantee that every video can be downloaded (platforms may block access at any time). We do not guarantee 24/7 service availability. Video quality depends on the original source.'}
+          </p>
+
+          <h2>{isID ? '11. Batasan Tanggung Jawab' : '11. Limitation of Liability'}</h2>
+          <p>
+            {isID
+              ? 'UnduhAja tidak bertanggung jawab atas kerugian langsung, tidak langsung, insidental, atau konsekuensial yang timbul dari penggunaan Layanan. Tanggung jawab maksimum kami terbatas pada jumlah yang telah Anda bayarkan kepada kami (yaitu nol, karena Layanan gratis).'
+              : 'UnduhAja is not liable for direct, indirect, incidental, or consequential damages arising from use of the Service. Our maximum liability is limited to the amount you have paid us (i.e., zero, since the Service is free).'}
+          </p>
+
+          <h2>{isID ? '12. Perubahan Ketentuan' : '12. Changes to Terms'}</h2>
+          <p>
+            {isID
+              ? 'Kami berhak memperbarui Ketentuan ini sewaktu-waktu. Perubahan signifikan akan diumumkan 30 hari sebelum berlaku. Penggunaan Layanan setelah perubahan berlaku dianggap sebagai persetujuan Anda terhadap ketentuan baru.'
+              : 'We reserve the right to update these Terms at any time. Significant changes will be announced 30 days before taking effect. Use of the Service after changes take effect constitutes your agreement to the new terms.'}
+          </p>
+
+          <h2>{isID ? '13. Hukum yang Berlaku' : '13. Governing Law'}</h2>
+          <p>
+            {isID
+              ? 'Ketentuan ini diatur oleh hukon Republik Indonesia. Setiap sengketa yang timbul akan diselesaikan terlebih dahulu melalui mediasi. Jika mediasi gagal, sengketa akan diajukan ke Pengadilan Negeri Jakarta Selatan.'
+              : 'These Terms are governed by the laws of the Republic of Indonesia. Any disputes arising will first be resolved through mediation. If mediation fails, disputes will be filed at the South Jakarta District Court.'}
+          </p>
+
+          <h2>{isID ? '14. Kontak' : '14. Contact'}</h2>
+          <p>
+            {isID
+              ? 'Pertanyaan terkait Ketentuan Layanan? Email kami di legal@unduhaja.vercel.app.'
+              : 'Questions about Terms of Service? Email us at legal@unduhaja.vercel.app.'}
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer lang={lang} />
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding: var(--space-20) 0 var(--space-12);
+    background:
+      radial-gradient(ellipse at top, var(--color-primary-subtle) 0%, transparent 60%),
+      var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    text-align: center;
+  }
+
+  .page-header h1 {
+    margin: 0 0 var(--space-4);
+  }
+
+  .subtitle {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-lg);
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .updated {
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-sm);
+    margin-top: var(--space-4);
+  }
+
+  .page-content {
+    padding: var(--space-16) 0;
+  }
+
+  .prose h2 {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    margin-top: var(--space-12);
+    margin-bottom: var(--space-3);
+    color: var(--color-text);
+  }
+
+  .prose h2:first-child {
+    margin-top: 0;
+  }
+
+  .prose p {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-relaxed);
+    margin-bottom: var(--space-4);
+  }
+
+  .prose ul {
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-relaxed);
+    margin-bottom: var(--space-4);
+    padding-left: var(--space-6);
+  }
+
+  .prose li {
+    margin-bottom: var(--space-2);
+  }
+</style>

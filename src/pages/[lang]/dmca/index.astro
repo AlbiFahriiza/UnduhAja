@@ -1,0 +1,260 @@
+---
+export const prerender = true;
+
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Header from '@/components/astro/Header.astro';
+import Footer from '@/components/astro/Footer.astro';
+import { type Lang, createTranslator, localizePath } from '@/i18n/utils';
+
+export function getStaticPaths() {
+  return [{ params: { lang: 'id' } }, { params: { lang: 'en' } }];
+}
+
+const { lang } = Astro.params as { lang: Lang };
+const t = createTranslator(lang);
+const isID = lang === 'id';
+
+const lastUpdated = '18 Juli 2026';
+---
+
+<BaseLayout
+  title={`${t('pages.dmca.title')} — UnduhAja`}
+  description={t('pages.dmca.subtitle')}
+  lang={lang}
+>
+  <Header lang={lang} />
+
+  <main>
+    <section class="page-header">
+      <div class="container">
+        <h1>{t('pages.dmca.title')}</h1>
+        <p class="subtitle">{t('pages.dmca.subtitle')}</p>
+        <p class="updated">{isID ? 'Terakhir diperbarui:' : 'Last updated:'} {lastUpdated}</p>
+      </div>
+    </section>
+
+    <section class="page-content">
+      <div class="container container-narrow">
+        <div class="prose">
+          <h2>{isID ? '1. Ringkasan' : '1. Summary'}</h2>
+          <p>
+            {isID
+              ? 'UnduhAja menghormati hak kekayaan intelektual orang lain dan berkomitmen untuk mematuhi Digital Millennium Copyright Act (DMCA). Kami tidak menyimpan, tidak host, dan tidak mendistribusikan video apa pun di server kami. UnduhAja hanya berfungsi sebagai tool yang memfasilitasi pengguna untuk mengunduh video dari platform pihak ketiga (YouTube, TikTok) untuk konsumsi pribadi.'
+              : 'UnduhAja respects the intellectual property rights of others and is committed to complying with the Digital Millennium Copyright Act (DMCA). We do not store, host, or distribute any videos on our servers. UnduhAja only functions as a tool that facilitates users to download videos from third-party platforms (YouTube, TikTok) for personal consumption.'}
+          </p>
+
+          <h2>{isID ? '2. Cara Kerja UnduhAja' : '2. How UnduhAja Works'}</h2>
+          <p>
+            {isID
+              ? 'Saat Anda menggunakan UnduhAja, tool kami melakukan fetch langsung ke server platform asli (YouTube/TikTok) melalui proxy Cloudflare Worker, lalu men-stream video langsung ke browser Anda tanpa menyimpan salinan apapun di server kami. Setelah unduhan selesai, semua jejak URL dan data sementara dihapus dari memory server.'
+              : 'When you use UnduhAja, our tool fetches directly from the original platform servers (YouTube/TikTok) via Cloudflare Worker proxy, then streams the video directly to your browser without storing any copy on our servers. After download completes, all traces of URL and temporary data are deleted from server memory.'}
+          </p>
+          <p>
+            {isID
+              ? 'Karena kami tidak menyimpan video di server kami, kami tidak bisa menghapus video dari "platform kami" — video tersebut tetap tersedia di platform aslinya (YouTube/TikTok). Untuk penghapusan video dari platform asli, hubungi YouTube atau TikTok langsung.'
+              : 'Because we do not store videos on our servers, we cannot remove videos from "our platform" — the videos remain available on their original platforms (YouTube/TikTok). For video removal from original platforms, contact YouTube or TikTok directly.'}
+          </p>
+
+          <h2>{isID ? '3. Mekanisme DMCA Takedown' : '3. DMCA Takedown Mechanism'}</h2>
+          <p>
+            {isID
+              ? 'Jika Anda adalah pemilik hak cipta (atau authorized agent) dan yakin bahwa tool kami digunakan untuk mengunduh video Anda tanpa izin, Anda bisa kirim DMCA takedown notice. Kami akan menanggapi dalam 72 jam dengan:'
+              : 'If you are the copyright owner (or authorized agent) and believe our tool is being used to download your videos without permission, you can send a DMCA takedown notice. We will respond within 72 hours by:'}
+          </p>
+          <ul>
+            <li>{isID ? 'Memblokir URL video spesifik agar tidak bisa diunduh via UnduhAja' : 'Blocking the specific video URL from being downloaded via UnduhAja'}</li>
+            <li>{isID ? 'Menambahkan video ID ke blacklist internal kami' : 'Adding the video ID to our internal blacklist'}</li>
+            <li>{isID ? 'Merespons via email dengan konfirmasi takedown' : 'Responding via email with takedown confirmation'}</li>
+          </ul>
+
+          <h2>{isID ? '4. Format DMCA Notice yang Valid' : '4. Valid DMCA Notice Format'}</h2>
+          <p>{isID ? 'DMCA notice Anda harus mencakup elemen-elemen berikut sesuai 17 U.S.C. § 512(c)(3):' : 'Your DMCA notice must include the following elements per 17 U.S.C. § 512(c)(3):'}</p>
+
+          <div class="notice-template">
+            <h3>{isID ? 'Template Email DMCA' : 'DMCA Email Template'}</h3>
+            <pre>Subject: DMCA Takedown Notice — UnduhAja
+
+To: dmca@unduhaja.vercel.app
+
+1. Identification of Copyrighted Work:
+   [Jelaskan karya berhak cipta yang dilanggar, cth: "Video berjudul 'XXX' yang diunggah ke YouTube pada tanggal YYYY-MM-DD"]
+
+2. Identification of Infringing Material:
+   [URL spesifik video yang bisa diunduh via UnduhAja]
+
+3. Contact Information:
+   Nama: [Nama lengkap Anda]
+   Email: [Email Anda]
+   Alamat: [Alamat fisik Anda]
+   Telepon: [Nomor telepon Anda]
+
+4. Good Faith Statement:
+   "I have a good faith belief that use of the copyrighted materials described above as allegedly infringing is not authorized by the copyright owner, its agent, or the law."
+
+5. Statement of Accuracy:
+   "I swear, under penalty of perjury, that the information in the notification is accurate and that I am the copyright owner or am authorized to act on behalf of the owner of an exclusive right that is allegedly infringed."
+
+6. Physical or Electronic Signature:
+   [Tanda tangan fisik atau elektronik]</pre>
+          </div>
+
+          <h2>{isID ? '5. Counter-Notification' : '5. Counter-Notification'}</h2>
+          <p>
+            {isID
+              ? 'Jika Anda percaya bahwa video Anda keliru di-takedown (misal: Anda punya lisensi, atau video adalah fair use), Anda bisa kirim counter-notification. Format counter-notice harus mencakup:'
+              : 'If you believe your video was mistakenly taken down (e.g., you have a license, or the video is fair use), you can send a counter-notification. The counter-notice format must include:'}
+          </p>
+          <ul>
+            <li>{isID ? 'Identifikasi video yang di-takedown' : 'Identification of the removed video'}</li>
+            <li>{isID ? 'Statement good faith bahwa takedown dilakukan karena kesalahan atau misidentification' : 'Good faith statement that takedown was due to mistake or misidentification'}</li>
+            <li>{isID ? 'Contact information Anda' : 'Your contact information'}</li>
+            <li>{isID ? 'Persetujuan ke yurisdiksi Federal District Court' : 'Consent to Federal District Court jurisdiction'}</li>
+            <li>{isID ? 'Tanda tangan fisik atau elektronik' : 'Physical or electronic signature'}</li>
+          </ul>
+
+          <h2>{isID ? '6. Repeat Infringer Policy' : '6. Repeat Infringer Policy'}</h2>
+          <p>
+            {isID
+              ? 'Sesuai DMCA Section 512(i), UnduhAja menerapkan kebijakan repeat infringer. User yang terbukti berulang kali mengunduh konten berhak cipta tanpa izin (setelah menerima 3 DMCA takedown notice valid) akan diban permanen dari layanan kami.'
+              : 'Per DMCA Section 512(i), UnduhAja maintains a repeat infringer policy. Users proven to repeatedly download copyrighted content without permission (after receiving 3 valid DMCA takedown notices) will be permanently banned from our service.'}
+          </p>
+
+          <h2>{isID ? '7. Contact' : '7. Contact'}</h2>
+          <p>
+            {isID ? 'Kirim semua DMCA notice ke:' : 'Send all DMCA notices to:'}
+          </p>
+          <div class="contact-box">
+            <p><strong>Email:</strong> <a href="mailto:dmca@unduhaja.vercel.app">dmca@unduhaja.vercel.app</a></p>
+            <p><strong>{isID ? 'Response time:' : 'Response time:'}</strong> {isID ? '72 jam kerja' : '72 business hours'}</p>
+            <p><strong>{isID ? 'Bahasa yang didukung:' : 'Supported languages:'}</strong> {isID ? 'Indonesia, English' : 'Indonesian, English'}</p>
+          </div>
+
+          <div class="cta-box">
+            <h3>{isID ? 'Butuh bantuan lain?' : 'Need other help?'}</h3>
+            <p>{isID ? 'Cek halaman Terms of Service atau FAQ kami.' : 'Check our Terms of Service or FAQ page.'}</p>
+            <div class="cta-buttons">
+              <a href={localizePath(lang, '/terms')} class="btn-secondary">{isID ? 'Terms of Service' : 'Terms of Service'}</a>
+              <a href={localizePath(lang, '/faq')} class="btn-primary">{isID ? 'FAQ' : 'FAQ'}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer lang={lang} />
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding: var(--space-20) 0 var(--space-12);
+    background: radial-gradient(ellipse at top, var(--color-primary-subtle) 0%, transparent 60%), var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    text-align: center;
+  }
+  .page-header h1 { margin: 0 0 var(--space-4); }
+  .subtitle {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-lg);
+    max-width: 560px;
+    margin: 0 auto;
+  }
+  .updated {
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-sm);
+    margin-top: var(--space-4);
+  }
+  .page-content { padding: var(--space-16) 0; }
+  .prose h2 {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    margin-top: var(--space-12);
+    margin-bottom: var(--space-3);
+    color: var(--color-text);
+  }
+  .prose h2:first-child { margin-top: 0; }
+  .prose h3 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-2);
+    color: var(--color-text);
+  }
+  .prose p {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-relaxed);
+    margin-bottom: var(--space-4);
+  }
+  .prose ul {
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-relaxed);
+    margin-bottom: var(--space-4);
+    padding-left: var(--space-6);
+  }
+  .prose li { margin-bottom: var(--space-2); }
+  .prose strong { color: var(--color-text); }
+
+  .notice-template {
+    margin: var(--space-6) 0;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+  }
+  .notice-template h3 { margin: 0 0 var(--space-3); }
+  .notice-template pre {
+    background: var(--color-surface-sunken);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm);
+    color: var(--color-text);
+    line-height: var(--line-height-normal);
+    margin: 0;
+    white-space: pre-wrap;
+  }
+
+  .contact-box {
+    margin: var(--space-6) 0;
+    padding: var(--space-6);
+    background: var(--color-primary-subtle);
+    border: 1px solid var(--color-primary-border);
+    border-radius: var(--radius-lg);
+  }
+  .contact-box p { margin: 0 0 var(--space-2); color: var(--color-text); }
+  .contact-box p:last-child { margin-bottom: 0; }
+  .contact-box a { color: var(--color-primary); }
+
+  .cta-box {
+    margin-top: var(--space-16);
+    padding: var(--space-10);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    text-align: center;
+  }
+  .cta-box h3 {
+    font-size: var(--font-size-xl);
+    color: var(--color-text);
+    margin: 0 0 var(--space-3);
+  }
+  .cta-box p { color: var(--color-text-secondary); margin: 0 0 var(--space-6); }
+  .cta-buttons { display: flex; gap: var(--space-3); justify-content: center; flex-wrap: wrap; }
+  .btn-primary, .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-3) var(--space-6);
+    text-decoration: none;
+    font-weight: var(--font-weight-semibold);
+    border-radius: var(--radius-md);
+    transition: all var(--duration-fast) ease;
+  }
+  .btn-primary { background: var(--color-primary); color: var(--color-text-inverse); }
+  .btn-primary:hover { background: var(--color-primary-hover); transform: translateY(-1px); }
+  .btn-secondary { background: var(--color-surface); color: var(--color-text); border: 1px solid var(--color-border); }
+  .btn-secondary:hover { border-color: var(--color-primary-border); background: var(--color-surface-sunken); }
+</style>

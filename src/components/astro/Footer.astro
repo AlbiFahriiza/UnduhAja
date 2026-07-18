@@ -1,0 +1,218 @@
+---
+import { type Lang, localizePath, createTranslator } from '@/i18n/utils';
+
+export interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = createTranslator(lang);
+
+const footerSections = [
+  {
+    title: t('footer.product'),
+    links: [
+      { label: t('nav.home'), href: localizePath(lang, '/') },
+      { label: t('footer.changelog'), href: localizePath(lang, '/changelog') },
+      { label: t('footer.status'), href: localizePath(lang, '/status') },
+    ],
+  },
+  {
+    title: t('footer.resources'),
+    links: [
+      { label: t('footer.documentation'), href: localizePath(lang, '/docs') },
+      { label: t('footer.faq'), href: localizePath(lang, '/faq') },
+      { label: t('footer.guides'), href: localizePath(lang, '/guides') },
+      { label: t('footer.api'), href: localizePath(lang, '/api-docs') },
+      { label: t('nav.blog'), href: localizePath(lang, '/blog') },
+    ],
+  },
+  {
+    title: t('footer.legal'),
+    links: [
+      { label: t('footer.privacy'), href: localizePath(lang, '/privacy') },
+      { label: t('footer.terms'), href: localizePath(lang, '/terms') },
+      { label: t('footer.dmca'), href: localizePath(lang, '/dmca') },
+    ],
+  },
+];
+
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <a href={localizePath(lang, '/')} class="footer__logo" aria-label="UnduhAja">
+          <img
+            src="/icons/logo-header.png"
+            srcset="/icons/logo-header.png 1x, /icons/logo-header@2x.png 2x"
+            width="32"
+            height="32"
+            alt="UnduhAja"
+            class="footer__logo-img"
+            loading="lazy"
+          />
+          <span>UnduhAja</span>
+        </a>
+        <p class="footer__tagline">{t('hero.subtitle')}</p>
+        <p class="footer__made">Dibuat di Indonesia 🇮🇩</p>
+      </div>
+
+      <div class="footer__columns">
+        {footerSections.map((section) => (
+          <div class="footer__column">
+            <h3 class="footer__column-title">{section.title}</h3>
+            <ul class="footer__column-list">
+              {section.links.map((link) => (
+                <li>
+                  <a href={link.href} class="footer__column-link">
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <p class="footer__copyright">
+        © {currentYear} UnduhAja. {t('footer.copyright').replace('© 2025 UnduhAja. ', '')}
+      </p>
+      <p class="footer__version">v1.0.0</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: 1px solid var(--color-border);
+    background: var(--color-surface);
+    padding: var(--space-20) 0 var(--space-10);
+    margin-top: var(--space-32);
+  }
+
+  .footer__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+  }
+
+  .footer__top {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: var(--space-12);
+  }
+
+  .footer__brand {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .footer__logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-text);
+    text-decoration: none;
+    font-weight: var(--font-weight-extrabold);
+    font-size: var(--font-size-lg);
+  }
+
+  .footer__logo-img {
+    width: 32px;
+    height: 32px;
+    display: block;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+
+  .footer__tagline {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-relaxed);
+    max-width: 280px;
+  }
+
+  .footer__made {
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
+    margin-top: var(--space-2);
+  }
+
+  .footer__columns {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-8);
+  }
+
+  .footer__column-title {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+    margin-bottom: var(--space-4);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+
+  .footer__column-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .footer__column-link {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+    transition: color var(--duration-fast) ease;
+  }
+
+  .footer__column-link:hover {
+    color: var(--color-primary);
+  }
+
+  .footer__bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--color-border);
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
+  }
+
+  .footer__version {
+    font-family: var(--font-mono);
+  }
+
+  @media (max-width: 880px) {
+    .footer__top {
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
+    }
+
+    .footer__columns {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-6);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .footer__columns {
+      grid-template-columns: 1fr;
+    }
+
+    .footer__bottom {
+      flex-direction: column;
+      gap: var(--space-2);
+      align-items: flex-start;
+    }
+  }
+</style>

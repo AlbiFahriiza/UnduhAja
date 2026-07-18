@@ -1,0 +1,253 @@
+/* ============================================
+   UnduhAja Design Tokens v1.0.0
+   Single source of truth for all design values
+   ============================================ */
+
+:root {
+  /* ---------------------------------------------
+     Color — Brand (Light Mode Default)
+     --------------------------------------------- */
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-primary-active: #1e40af;
+  --color-primary-subtle: #eff6ff;
+  --color-primary-border: #bfdbfe;
+
+  --color-accent: #7c3aed;
+  --color-accent-hover: #6d28d9;
+  --color-accent-subtle: #f5f3ff;
+
+  --color-success: #22c55e;
+  --color-success-subtle: #f0fdf4;
+  --color-success-border: #bbf7d0;
+
+  --color-warning: #f59e0b;
+  --color-warning-subtle: #fffbeb;
+  --color-warning-border: #fde68a;
+
+  --color-error: #ef4444;
+  --color-error-subtle: #fef2f2;
+  --color-error-border: #fecaca;
+
+  --color-info: #0ea5e9;
+  --color-info-subtle: #f0f9ff;
+
+  /* ---------------------------------------------
+     Surface — Light
+     --------------------------------------------- */
+  --color-bg: #f8fafc;
+  --color-surface: #ffffff;
+  --color-surface-elevated: #ffffff;
+  --color-surface-sunken: #f1f5f9;
+
+  /* ---------------------------------------------
+     Text — Light
+     --------------------------------------------- */
+  --color-text: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-tertiary: #94a3b8;
+  --color-text-inverse: #ffffff;
+  --color-text-link: #2563eb;
+
+  /* ---------------------------------------------
+     Border — Light
+     --------------------------------------------- */
+  --color-border: #e2e8f0;
+  --color-border-strong: #cbd5e1;
+  --color-border-subtle: #f1f5f9;
+
+  /* ---------------------------------------------
+     Typography
+     --------------------------------------------- */
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Menlo, Monaco, Consolas, monospace;
+
+  /* Font weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  /* Font sizes — fluid typography */
+  --font-size-xs: 0.75rem;     /* 12px */
+  --font-size-sm: 0.875rem;    /* 14px */
+  --font-size-base: 1rem;      /* 16px */
+  --font-size-lg: 1.125rem;    /* 18px */
+  --font-size-xl: 1.25rem;     /* 20px */
+  --font-size-2xl: 1.5rem;     /* 24px */
+  --font-size-3xl: 1.875rem;   /* 30px */
+  --font-size-4xl: 2.25rem;    /* 36px */
+  --font-size-5xl: 3rem;       /* 48px */
+  --font-size-6xl: 3.75rem;    /* 60px */
+  --font-size-7xl: 4.5rem;     /* 72px */
+
+  /* Line heights */
+  --line-height-tight: 1.15;
+  --line-height-snug: 1.3;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.65;
+  --line-height-loose: 1.85;
+
+  /* Letter spacing */
+  --tracking-tighter: -0.03em;
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.02em;
+  --tracking-wider: 0.04em;
+
+  /* ---------------------------------------------
+     Radius
+     --------------------------------------------- */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+
+  /* ---------------------------------------------
+     Spacing — 4px base (Linear/Vercel-like)
+     --------------------------------------------- */
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+  --space-32: 128px;
+  --space-40: 160px;
+
+  /* ---------------------------------------------
+     Shadow — single-layer subtle (zero blur policy)
+     --------------------------------------------- */
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 2px 4px rgba(15, 23, 42, 0.06), 0 4px 8px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 4px 8px rgba(15, 23, 42, 0.06), 0 8px 16px rgba(15, 23, 42, 0.04);
+  --shadow-xl: 0 8px 16px rgba(15, 23, 42, 0.06), 0 16px 32px rgba(15, 23, 42, 0.04);
+  --shadow-focus: 0 0 0 3px rgba(37, 99, 235, 0.15);
+
+  /* ---------------------------------------------
+     Z-index
+     --------------------------------------------- */
+  --z-base: 0;
+  --z-dropdown: 1000;
+  --z-sticky: 1100;
+  --z-fixed: 1200;
+  --z-modal-backdrop: 1300;
+  --z-modal: 1400;
+  --z-toast: 1500;
+  --z-tooltip: 1600;
+
+  /* ---------------------------------------------
+     Layout
+     --------------------------------------------- */
+  --container-max: 1280px;
+  --container-narrow: 768px;
+  --container-wide: 1440px;
+  --header-height: 64px;
+
+  /* ---------------------------------------------
+     Motion — RK4 Analytical Spring (Apple-like)
+     Stiffness: 250, Damping: 22, Mass: 1.0
+     --------------------------------------------- */
+  --spring-stiffness: 250;
+  --spring-damping: 22;
+  --spring-mass: 1;
+
+  /* Animation durations (for fallback / non-spring cases) */
+  --duration-instant: 0ms;
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+  --duration-slower: 600ms;
+
+  /* Placeholder char animation */
+  --placeholder-char-out: 40ms;
+  --placeholder-char-in: 35ms;
+
+  /* ---------------------------------------------
+     Component Tokens
+     --------------------------------------------- */
+  --button-height-md: 44px;
+  --button-height-lg: 52px;
+  --button-padding-x: 20px;
+
+  --input-height-md: 44px;
+  --input-height-lg: 56px;
+  --input-padding-x: 16px;
+}
+
+/* ============================================
+   Dark Mode
+   ============================================ */
+[data-theme='dark'] {
+  --color-primary: #3b82f6;
+  --color-primary-hover: #60a5fa;
+  --color-primary-active: #93c5fd;
+  --color-primary-subtle: rgba(59, 130, 246, 0.1);
+  --color-primary-border: rgba(59, 130, 246, 0.3);
+
+  --color-accent: #a78bfa;
+  --color-accent-hover: #c4b5fd;
+  --color-accent-subtle: rgba(167, 139, 250, 0.1);
+
+  --color-success: #4ade80;
+  --color-success-subtle: rgba(74, 222, 128, 0.1);
+  --color-success-border: rgba(74, 222, 128, 0.3);
+
+  --color-warning: #fbbf24;
+  --color-warning-subtle: rgba(251, 191, 36, 0.1);
+  --color-warning-border: rgba(251, 191, 36, 0.3);
+
+  --color-error: #f87171;
+  --color-error-subtle: rgba(248, 113, 113, 0.1);
+  --color-error-border: rgba(248, 113, 113, 0.3);
+
+  --color-info: #38bdf8;
+  --color-info-subtle: rgba(56, 189, 248, 0.1);
+
+  --color-bg: #0b0f1a;
+  --color-surface: #111827;
+  --color-surface-elevated: #1f2937;
+  --color-surface-sunken: #060912;
+
+  --color-text: #f1f5f9;
+  --color-text-secondary: #cbd5e1;
+  --color-text-tertiary: #64748b;
+  --color-text-inverse: #0f172a;
+  --color-text-link: #60a5fa;
+
+  --color-border: #1f2937;
+  --color-border-strong: #374151;
+  --color-border-subtle: #111827;
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.4), 0 4px 8px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.4), 0 8px 16px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 8px 16px rgba(0, 0, 0, 0.5), 0 16px 32px rgba(0, 0, 0, 0.4);
+  --shadow-focus: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+
+/* ============================================
+   Reduced Motion
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

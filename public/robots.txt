@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# Sitemaps
+Sitemap: https://unduhaja.vercel.app/sitemap-index.xml
+Sitemap: https://unduhaja.vercel.app/sitemap-0.xml

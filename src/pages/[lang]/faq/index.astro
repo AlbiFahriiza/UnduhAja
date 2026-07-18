@@ -1,0 +1,379 @@
+---
+export const prerender = true;
+
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Header from '@/components/astro/Header.astro';
+import Footer from '@/components/astro/Footer.astro';
+import { type Lang, createTranslator, localizePath } from '@/i18n/utils';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'id' } },
+    { params: { lang: 'en' } },
+  ];
+}
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.params as Props;
+const t = createTranslator(lang);
+
+const faqCategories = lang === 'id' ? [
+  {
+    title: 'Umum',
+    items: [
+      {
+        q: 'Apa itu UnduhAja?',
+        a: 'UnduhAja adalah platform downloader video modern yang mendukung YouTube dan TikTok. Dibuat dengan fokus pada kecepatan, privasi, dan pengalaman pengguna kelas enterprise. Anda cukup menempelkan URL video, memilih kualitas, dan mengunduh — tanpa ribet, tanpa iklan mengganggu.'
+      },
+      {
+        q: 'Apakah UnduhAja gratis?',
+        a: 'Ya, UnduhAja sepenuhnya gratis untuk penggunaan pribadi. Mode tamu mendapatkan 5 unduhan per jam. Jika Anda membuat akun gratis, batasnya naik menjadi 50 unduhan per jam. Tidak ada fitur berbayar di v1.0.0.'
+      },
+      {
+        q: 'Apakah UnduhAja aman digunakan?',
+        a: 'Aman. Kami tidak menyimpan riwayat unduhan Anda, tidak menggunakan cookie tracking, dan tidak menjual data ke pihak ketiga. URL yang Anda tempelkan diproses langsung di server dan langsung dihapus setelah unduhan selesai. Kami menggunakan HTTPS untuk semua komunikasi.'
+      }
+    ]
+  },
+  {
+    title: 'Download',
+    items: [
+      {
+        q: 'Platform apa saja yang didukung?',
+        a: 'Saat ini UnduhAja mendukung YouTube (termasuk YouTube Shorts) dan TikTok. Kami terus mengevaluasi platform lain untuk ditambahkan di versi mendatang. Jika Anda ingin platform tertentu ditambahkan, hubungi kami melalui email.'
+      },
+      {
+        q: 'Kualitas apa saja yang tersedia?',
+        a: 'Untuk video, kami mendukung dari 144p hingga 1080p60 (jika tersedia dari sumber). Untuk audio, kami mendukung MP3 (320 kbps) dan M4A (256 kbps AAC). Pilihan kualitas disesuaikan dengan apa yang tersedia di video aslinya — jika kualitas tertentu tidak ada di sumber, tidak akan muncul di dropdown.'
+      },
+      {
+        q: 'Berapa ukuran file maksimal?',
+        a: 'Kami mendukung file hingga 5GB per unduhan. Jika video Anda lebih besar dari itu, Anda akan melihat pesan error. Untuk video durasi sangat panjang (di atas 2 jam), sebaiknya pertimbangkan untuk membaginya terlebih dahulu.'
+      },
+      {
+        q: 'Bisakah saya mengunduh playlist?',
+        a: 'Tidak. Saat ini UnduhAja hanya mendukung unduhan video tunggal. Jika Anda menempelkan URL playlist, akan muncul pesan error. Fitur playlist sedang dievaluasi untuk versi mendatang.'
+      },
+      {
+        q: 'Apakah live stream bisa diunduh?',
+        a: 'Tidak. Live stream YouTube tidak dapat diunduh saat sedang berlangsung. Setelah stream selesai dan diarsipkan oleh YouTube, Anda bisa mengunduhnya seperti video biasa.'
+      }
+    ]
+  },
+  {
+    title: 'Privasi & Keamanan',
+    items: [
+      {
+        q: 'Apakah UnduhAja menyimpan URL yang saya unduh?',
+        a: 'Tidak. URL yang Anda tempelkan diproses langsung oleh yt-dlp di server kami dan langsung dibuang setelah unduhan selesai. Kami tidak menyimpan log URL, tidak menyimpan riwayat unduhan, dan tidak menggunakan cookie tracking.'
+      },
+      {
+        q: 'Apakah ada tracking atau analytics?',
+        a: 'Tidak. UnduhAja v1.0.0 tidak menggunakan analytics apa pun — tidak ada Google Analytics, tidak ada Facebook Pixel, tidak ada Vercel Analytics. Privasi Anda adalah prioritas utama kami.'
+      },
+      {
+        q: 'Bagaimana data autentikasi saya disimpan?',
+        a: 'Autentikasi ditangani oleh Supabase (layanan enterprise-grade). Password di-hash menggunakan algoritma bcrypt. Untuk login dengan Google, kami hanya menerima token OAuth standar — kami tidak pernah melihat password Google Anda. Session disimpan di cookie httpOnly yang aman.'
+      }
+    ]
+  },
+  {
+    title: 'Teknis',
+    items: [
+      {
+        q: 'Teknologi apa yang digunakan UnduhAja?',
+        a: 'UnduhAja dibangun dengan Astro (framework web modern), React untuk interaktivitas, CSS Modules untuk styling, dan yt-dlp sebagai engine downloader. Backend di-hosting di Vercel dengan rate limiting via Upstash Redis. Animasi menggunakan custom RK4 analytical spring engine berbasis Web Animations API.'
+      },
+      {
+        q: 'Mengapa animasinya terasa premium?',
+        a: 'Kami menggunakan analytical spring physics (closed-form solution, frame-rate independent) untuk semua animasi — bukan CSS transition linear. Profil spring yang digunakan meniru gerakan iOS Apple: ada overshoot halus yang membuat motion terasa natural. Setiap karakter placeholder, hover tombol, dan entrance card semuanya menggunakan spring.'
+      },
+      {
+        q: 'Apakah UnduhAja open source?',
+        a: 'Saat ini UnduhAja bukan open source. Namun, kami transparan tentang teknologi yang digunakan (lihat FAQ di atas) dan kami menghormati lisensi masing-masing dependency.'
+      }
+    ]
+  }
+] : [
+  {
+    title: 'General',
+    items: [
+      {
+        q: 'What is UnduhAja?',
+        a: 'UnduhAja is a modern video downloader platform that supports YouTube and TikTok. Built with focus on speed, privacy, and enterprise-grade user experience. Just paste a video URL, pick quality, and download — no hassle, no annoying ads.'
+      },
+      {
+        q: 'Is UnduhAja free?',
+        a: 'Yes, UnduhAja is completely free for personal use. Guest mode gets 5 downloads per hour. If you create a free account, the limit increases to 50 downloads per hour. There are no paid features in v1.0.0.'
+      },
+      {
+        q: 'Is UnduhAja safe to use?',
+        a: 'Yes. We do not store your download history, do not use tracking cookies, and do not sell data to third parties. URLs you paste are processed on-the-fly on our server and discarded immediately after download completes. All communication uses HTTPS.'
+      }
+    ]
+  },
+  {
+    title: 'Downloads',
+    items: [
+      {
+        q: 'Which platforms are supported?',
+        a: 'Currently UnduhAja supports YouTube (including YouTube Shorts) and TikTok. We are continuously evaluating other platforms to add in future versions. If you want a specific platform added, contact us via email.'
+      },
+      {
+        q: 'What qualities are available?',
+        a: 'For video, we support from 144p up to 1080p60 (when available from source). For audio, we support MP3 (320 kbps) and M4A (256 kbps AAC). Quality options adapt to what is available in the original video — if a quality is missing from source, it will not appear in the dropdown.'
+      },
+      {
+        q: 'What is the maximum file size?',
+        a: 'We support files up to 5GB per download. If your video is larger, you will see an error message. For very long videos (over 2 hours), consider splitting them first.'
+      },
+      {
+        q: 'Can I download playlists?',
+        a: 'No. Currently UnduhAja only supports single video downloads. If you paste a playlist URL, an error will appear. Playlist support is being evaluated for future versions.'
+      },
+      {
+        q: 'Can live streams be downloaded?',
+        a: 'No. YouTube live streams cannot be downloaded while in progress. After the stream ends and is archived by YouTube, you can download it like a regular video.'
+      }
+    ]
+  },
+  {
+    title: 'Privacy & Security',
+    items: [
+      {
+        q: 'Does UnduhAja store the URLs I download?',
+        a: 'No. URLs you paste are processed directly by yt-dlp on our server and discarded immediately after download completes. We do not log URLs, do not store download history, and do not use tracking cookies.'
+      },
+      {
+        q: 'Is there any tracking or analytics?',
+        a: 'No. UnduhAja v1.0.0 does not use any analytics — no Google Analytics, no Facebook Pixel, no Vercel Analytics. Your privacy is our top priority.'
+      },
+      {
+        q: 'How is my authentication data stored?',
+        a: 'Authentication is handled by Supabase (enterprise-grade service). Passwords are hashed using bcrypt algorithm. For Google login, we only receive standard OAuth tokens — we never see your Google password. Sessions are stored in secure httpOnly cookies.'
+      }
+    ]
+  },
+  {
+    title: 'Technical',
+    items: [
+      {
+        q: 'What technology does UnduhAja use?',
+        a: 'UnduhAja is built with Astro (modern web framework), React for interactivity, CSS Modules for styling, and yt-dlp as the downloader engine. Backend is hosted on Vercel with rate limiting via Upstash Redis. Animations use a custom RK4 analytical spring engine based on Web Animations API.'
+      },
+      {
+        q: 'Why do the animations feel premium?',
+        a: 'We use analytical spring physics (closed-form solution, frame-rate independent) for all animations — not linear CSS transitions. The spring profile mimics Apple iOS motion: subtle overshoot that makes motion feel natural. Every placeholder character, button hover, and card entrance uses spring.'
+      },
+      {
+        q: 'Is UnduhAja open source?',
+        a: 'Currently UnduhAja is not open source. However, we are transparent about the technology used (see FAQ above) and we respect the licenses of each dependency.'
+      }
+    ]
+  }
+];
+
+const orgFaqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqCategories.flatMap((cat) =>
+    cat.items.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.a,
+      },
+    }))
+  ),
+};
+---
+
+<BaseLayout
+  title={`${t('pages.faq.title')} — UnduhAja`}
+  description={t('pages.faq.subtitle')}
+  lang={lang}
+>
+  <Header lang={lang} />
+
+  <main>
+    <section class="page-header">
+      <div class="container">
+        <h1>{t('pages.faq.title')}</h1>
+        <p class="subtitle">{t('pages.faq.subtitle')}</p>
+      </div>
+    </section>
+
+    <section class="page-content">
+      <div class="container container-narrow">
+        <script type="application/ld+json" set:html={JSON.stringify(orgFaqSchema)} />
+
+        {faqCategories.map((category) => (
+          <div class="faq-category">
+            <h2 class="faq-category__title">{category.title}</h2>
+            <div class="faq-list">
+              {category.items.map((item, i) => (
+                <details class="faq-item" name={`faq-${category.title}-${i}`}>
+                  <summary class="faq-item__q">
+                    <span>{item.q}</span>
+                    <svg class="faq-item__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <polyline points="6 9 12 15 18 9" />
+                    </svg>
+                  </summary>
+                  <div class="faq-item__a">
+                    <p>{item.a}</p>
+                  </div>
+                </details>
+              ))}
+            </div>
+          </div>
+        ))}
+
+        <div class="faq-cta">
+          <p>{lang === 'id' ? 'Masih ada pertanyaan?' : 'Still have questions?'}</p>
+          <a href={localizePath(lang, '/')} class="btn-primary">
+            {lang === 'id' ? 'Coba UnduhAja' : 'Try UnduhAja'}
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer lang={lang} />
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding: var(--space-20) 0 var(--space-12);
+    background:
+      radial-gradient(ellipse at top, var(--color-primary-subtle) 0%, transparent 60%),
+      var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    text-align: center;
+  }
+
+  .page-header h1 {
+    margin: 0 0 var(--space-4);
+  }
+
+  .subtitle {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-lg);
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .page-content {
+    padding: var(--space-16) 0;
+  }
+
+  .faq-category {
+    margin-bottom: var(--space-12);
+  }
+
+  .faq-category__title {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text);
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .faq-item {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: border-color var(--duration-fast) ease;
+  }
+
+  .faq-item[open] {
+    border-color: var(--color-primary-border);
+  }
+
+  .faq-item__q {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: var(--space-5) var(--space-6);
+    cursor: pointer;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+    list-style: none;
+  }
+
+  .faq-item__q::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-item__icon {
+    color: var(--color-text-tertiary);
+    transition: transform var(--duration-fast) ease;
+    flex-shrink: 0;
+  }
+
+  .faq-item[open] .faq-item__icon {
+    transform: rotate(180deg);
+  }
+
+  .faq-item__a {
+    padding: 0 var(--space-6) var(--space-5);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-relaxed);
+  }
+
+  .faq-item__a p {
+    margin: 0;
+  }
+
+  .faq-cta {
+    margin-top: var(--space-12);
+    padding: var(--space-8);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .faq-cta p {
+    margin: 0;
+    font-size: var(--font-size-lg);
+    color: var(--color-text);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-3) var(--space-6);
+    background: var(--color-primary);
+    color: var(--color-text-inverse);
+    text-decoration: none;
+    font-weight: var(--font-weight-semibold);
+    border-radius: var(--radius-md);
+    transition: background-color var(--duration-fast) ease, transform var(--duration-fast) ease;
+  }
+
+  .btn-primary:hover {
+    background: var(--color-primary-hover);
+    transform: translateY(-1px);
+  }
+</style>

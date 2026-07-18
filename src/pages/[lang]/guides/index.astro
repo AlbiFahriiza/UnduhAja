@@ -1,0 +1,271 @@
+---
+export const prerender = true;
+
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Header from '@/components/astro/Header.astro';
+import Footer from '@/components/astro/Footer.astro';
+import { type Lang, createTranslator, localizePath } from '@/i18n/utils';
+
+export function getStaticPaths() {
+  return [{ params: { lang: 'id' } }, { params: { lang: 'en' } }];
+}
+
+const { lang } = Astro.params as { lang: Lang };
+const t = createTranslator(lang);
+const isID = lang === 'id';
+
+const guides = isID ? [
+  {
+    icon: 'youtube',
+    tag: 'YouTube',
+    title: 'Cara Mengunduh Video YouTube 1080p60',
+    excerpt: 'Panduan lengkap mengunduh video YouTube kualitas Full HD 60fps menggunakan UnduhAja, termasuk tips memilih kualitas yang tepat untuk berbagai kebutuhan.',
+    duration: '5 menit',
+    slug: 'cara-unduh-video-youtube-1080p60',
+  },
+  {
+    icon: 'tiktok',
+    tag: 'TikTok',
+    title: 'Cara Mengunduh Video TikTok Tanpa Watermark',
+    excerpt: 'Pelajari cara mengunduh video TikTok tanpa watermark menggunakan UnduhAja, dengan penjelasan etika dan batasan legal yang perlu Anda ketahui.',
+    duration: '4 menit',
+    slug: 'tiktok-downloader-tanpa-watermark',
+  },
+  {
+    icon: 'audio',
+    tag: 'Audio',
+    title: 'Cara Ekstrak Audio MP3 320kbps dari YouTube',
+    excerpt: 'Tutorial ekstraksi audio berkualitas tinggi dari video YouTube. Pelajari perbedaan MP3 vs M4A dan kapan menggunakan masing-masing format.',
+    duration: '6 menit',
+    slug: 'ekstrak-audio-mp3-dari-youtube',
+  },
+  {
+    icon: 'shield',
+    tag: 'Privasi',
+    title: 'Privasi di Era Downloader Video',
+    excerpt: 'Mengapa privasi penting saat menggunakan downloader video, dan bagaimana UnduhAja melindungi data Anda dengan pendekatan privacy-first.',
+    duration: '7 menit',
+    slug: 'privasi-downloader-video',
+  },
+  {
+    icon: 'keyboard',
+    tag: 'Tips',
+    title: '10 Tips & Trik Menggunakan UnduhAja',
+    excerpt: 'Kumpulan tips tersembunyi: keyboard shortcut, drag & drop URL, auto-paste clipboard, dark mode, switch bahasa, dan banyak lagi.',
+    duration: '8 menit',
+    slug: '10-tips-trik-unduhaja',
+  },
+  {
+    icon: 'mobile',
+    tag: 'Mobile',
+    title: 'Install UnduhAja sebagai App di HP Android & iOS',
+    excerpt: 'Pelajari cara install UnduhAja sebagai Progressive Web App (PWA) di home screen HP, sehingga bisa dibuka seperti aplikasi native tanpa browser.',
+    duration: '3 menit',
+    slug: 'install-unduhaja-pwa-mobile',
+  },
+] : [
+  {
+    icon: 'youtube',
+    tag: 'YouTube',
+    title: 'How to Download YouTube Videos at 1080p60',
+    excerpt: 'Complete guide to downloading YouTube videos in Full HD 60fps using UnduhAja, including tips for choosing the right quality for different needs.',
+    duration: '5 min',
+    slug: 'how-to-download-youtube-1080p60',
+  },
+  {
+    icon: 'tiktok',
+    tag: 'TikTok',
+    title: 'How to Download TikTok Videos Without Watermark',
+    excerpt: 'Learn how to download TikTok videos without watermark using UnduhAja, with explanations of ethics and legal limitations you need to know.',
+    duration: '4 min',
+    slug: 'tiktok-downloader-without-watermark',
+  },
+  {
+    icon: 'audio',
+    tag: 'Audio',
+    title: 'How to Extract 320kbps MP3 Audio from YouTube',
+    excerpt: 'Tutorial for high-quality audio extraction from YouTube videos. Learn the difference between MP3 vs M4A and when to use each format.',
+    duration: '6 min',
+    slug: 'extract-mp3-audio-from-youtube',
+  },
+  {
+    icon: 'shield',
+    tag: 'Privacy',
+    title: 'Privacy in the Video Downloader Era',
+    excerpt: 'Why privacy matters when using video downloaders, and how UnduhAja protects your data with a privacy-first approach.',
+    duration: '7 min',
+    slug: 'privacy-video-downloader',
+  },
+  {
+    icon: 'keyboard',
+    tag: 'Tips',
+    title: '10 Tips & Tricks Using UnduhAja',
+    excerpt: 'Collection of hidden tips: keyboard shortcuts, drag & drop URL, auto-paste clipboard, dark mode, language switch, and much more.',
+    duration: '8 min',
+    slug: '10-tips-tricks-unduhaja',
+  },
+  {
+    icon: 'mobile',
+    tag: 'Mobile',
+    title: 'Install UnduhAja as App on Android & iOS',
+    excerpt: 'Learn how to install UnduhAja as a Progressive Web App (PWA) on your phone home screen, so you can open it like a native app without a browser.',
+    duration: '3 min',
+    slug: 'install-unduhaja-pwa-mobile',
+  },
+];
+
+const iconPaths: Record<string, string> = {
+  youtube: '<polygon points="23 7 16 12 23 17 23 7" /><rect x="1" y="5" width="15" height="14" rx="2" ry="2" />',
+  tiktok: '<path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />',
+  audio: '<path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" />',
+  shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />',
+  keyboard: '<rect x="2" y="4" width="20" height="16" rx="2" ry="2" /><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M7 16h10" />',
+  mobile: '<rect x="5" y="2" width="14" height="20" rx="2" ry="2" /><line x1="12" y1="18" x2="12.01" y2="18" />',
+};
+---
+
+<BaseLayout
+  title={`${t('pages.guides.title')} — UnduhAja`}
+  description={t('pages.guides.subtitle')}
+  lang={lang}
+>
+  <Header lang={lang} />
+
+  <main>
+    <section class="page-header">
+      <div class="container">
+        <h1>{t('pages.guides.title')}</h1>
+        <p class="subtitle">{t('pages.guides.subtitle')}</p>
+      </div>
+    </section>
+
+    <section class="page-content">
+      <div class="container">
+        <div class="guides-grid">
+          {guides.map((guide) => (
+            <article class="guide-card">
+              <a href={localizePath(lang, `/blog/${guide.slug}`)} class="guide-card__link">
+                <div class="guide-card__icon-wrap">
+                  <svg class="guide-card__icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={iconPaths[guide.icon]} />
+                </div>
+                <div class="guide-card__meta">
+                  <span class="guide-card__tag">{guide.tag}</span>
+                  <span class="guide-card__duration">{guide.duration}</span>
+                </div>
+                <h2 class="guide-card__title">{guide.title}</h2>
+                <p class="guide-card__excerpt">{guide.excerpt}</p>
+                <div class="guide-card__footer">
+                  <span>{isID ? 'Baca panduan' : 'Read guide'}</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
+                </div>
+              </a>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer lang={lang} />
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding: var(--space-20) 0 var(--space-12);
+    background: radial-gradient(ellipse at top, var(--color-primary-subtle) 0%, transparent 60%), var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    text-align: center;
+  }
+  .page-header h1 { margin: 0 0 var(--space-4); }
+  .subtitle {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-lg);
+    max-width: 560px;
+    margin: 0 auto;
+  }
+  .page-content { padding: var(--space-16) 0; }
+  .guides-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--space-5);
+  }
+  .guide-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    transition: all var(--duration-normal) ease;
+    overflow: hidden;
+  }
+  .guide-card:hover {
+    border-color: var(--color-primary-border);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+  .guide-card__link {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-6);
+    color: inherit;
+    text-decoration: none;
+    height: 100%;
+  }
+  .guide-card__icon-wrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    background: var(--color-primary-subtle);
+    color: var(--color-primary);
+    border-radius: var(--radius-lg);
+  }
+  .guide-card__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+  .guide-card__tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px var(--space-2);
+    background: var(--color-primary-subtle);
+    color: var(--color-primary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    border-radius: var(--radius-sm);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+  .guide-card__duration {
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
+  }
+  .guide-card__title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text);
+    line-height: var(--line-height-snug);
+    margin: 0;
+  }
+  .guide-card__excerpt {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-relaxed);
+    margin: 0;
+    flex: 1;
+  }
+  .guide-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--color-border-subtle);
+    font-size: var(--font-size-sm);
+    color: var(--color-primary);
+    font-weight: var(--font-weight-semibold);
+  }
+  .guide-card__footer svg { transition: transform var(--duration-fast) ease; }
+  .guide-card:hover .guide-card__footer svg { transform: translateX(4px); }
+</style>

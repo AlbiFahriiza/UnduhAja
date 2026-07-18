@@ -1,0 +1,211 @@
+{
+  "nav": {
+    "home": "Home",
+    "faq": "FAQ",
+    "blog": "Blog",
+    "about": "About",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "signin": "Sign in",
+    "signout": "Sign out",
+    "account": "Account",
+    "getStarted": "Start Download"
+  },
+  "hero": {
+    "badge": "v1.0.0 — YouTube & TikTok",
+    "title": "Download Videos Without the Hassle.",
+    "subtitle": "Paste URL. Pick quality. Download. Done.",
+    "description": "UnduhAja is a modern video downloader for YouTube and TikTok. Fast, free, no annoying ads. Made in Indonesia for Indonesia."
+  },
+  "input": {
+    "placeholder": "Enter your video URL!",
+    "placeholderTikTok": "https://www.tiktok.com/@xxxx/video/xxxxxxxx",
+    "placeholderYouTube": "https://youtu.be/xxxxxxxx",
+    "paste": "Paste",
+    "scan": "Scan",
+    "scanning": "Scanning...",
+    "clear": "Clear",
+    "invalid": "Invalid URL. Make sure it's from YouTube or TikTok.",
+    "unsupported": "Only YouTube and TikTok URLs are supported.",
+    "dragDrop": "or drag a URL here"
+  },
+  "preview": {
+    "title": "Video Preview",
+    "verified": "Verified",
+    "views": "views",
+    "duration": "Duration",
+    "uploaded": "Uploaded",
+    "channel": "Channel",
+    "creator": "Creator",
+    "description": "Description",
+    "music": "Music",
+    "noDescription": "No description",
+    "playVideo": "Play video",
+    "private": "This video is private",
+    "deleted": "Video has been deleted",
+    "ageRestricted": "This video requires age verification",
+    "tryAnother": "Try another URL"
+  },
+  "quality": {
+    "label": "Quality",
+    "video": "Video",
+    "audio": "Audio",
+    "selectQuality": "Select quality",
+    "default": "1080p60",
+    "mp3": "MP3",
+    "m4a": "M4A",
+    "best": "Source max",
+    "available": "Available"
+  },
+  "download": {
+    "button": "Download Now",
+    "processing": "Processing...",
+    "downloading": "Downloading...",
+    "success": "Download successful!",
+    "error": "Failed to download",
+    "retry": "Try again",
+    "manualFallback": "Manual download",
+    "fileSize": "File size",
+    "estimatedTime": "Estimated time"
+  },
+  "auth": {
+    "signinTitle": "Sign in to UnduhAja",
+    "signinSubtitle": "Log in for higher download limits",
+    "signupTitle": "Create an UnduhAja account",
+    "email": "Email",
+    "password": "Password",
+    "newPassword": "New password",
+    "signinGoogle": "Continue with Google",
+    "signinEmail": "Send magic link",
+    "magicLinkSent": "Check your email for the magic link",
+    "noAccount": "Don't have an account?",
+    "signup": "Sign up",
+    "haveAccount": "Already have an account?",
+    "signin": "Sign in",
+    "signinBtn": "Sign In",
+    "signupBtn": "Create Account",
+    "sendLink": "Send Reset Link",
+    "forgot": "Forgot Password",
+    "google": "Continue with Google",
+    "forgotLink": "Forgot password?",
+    "backToSignin": "Back to Sign In",
+    "verificationSent": "Check your email for verification. Click the link to activate your account.",
+    "signinSuccess": "Successfully signed in!",
+    "signupSuccess": "Account created successfully!",
+    "passwordReset": "Password updated successfully",
+    "emailRequired": "Email is required",
+    "passwordRequired": "Password is required",
+    "passwordTooShort": "Password must be at least 8 characters",
+    "invalidEmail": "Invalid email format",
+    "genericError": "An error occurred. Please try again later.",
+    "forgotPassword": "Forgot password?",
+    "resetPassword": "Send reset link",
+    "resetSent": "Reset link has been sent to your email",
+    "guestLimit": "Guest mode: 5 downloads/hour",
+    "userLimit": "Logged in: 50 downloads/hour",
+    "signout": "Sign out",
+    "account": "Account",
+    "profile": "Profile"
+  },
+  "footer": {
+    "product": "Product",
+    "resources": "Resources",
+    "legal": "Legal",
+    "changelog": "Changelog",
+    "status": "Status",
+    "documentation": "Documentation",
+    "faq": "FAQ",
+    "guides": "Guides",
+    "api": "API",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "dmca": "DMCA",
+    "copyright": "© 2025 UnduhAja. Made in Indonesia."
+  },
+  "errors": {
+    "rateLimited": "Download limit reached. Try again later or sign in for higher limits.",
+    "networkError": "Network error. Check your connection.",
+    "serverError": "Server error. Please try again shortly.",
+    "videoTooLarge": "Video too large. Max 5GB.",
+    "invalidUrl": "Invalid URL.",
+    "unsupportedUrl": "URL not supported. Use YouTube or TikTok.",
+    "videoNotFound": "Video not found.",
+    "videoPrivate": "Video is private.",
+    "videoDeleted": "Video has been deleted.",
+    "ageRestricted": "Video requires age verification.",
+    "liveStream": "Live streams are not supported.",
+    "playlistNotSupported": "Playlists are not supported. Paste a single video URL."
+  },
+  "toast": {
+    "success": "Success",
+    "error": "Error",
+    "info": "Info",
+    "warning": "Warning",
+    "copied": "Copied to clipboard",
+    "downloadStarted": "Download started",
+    "downloadComplete": "Download complete",
+    "downloadFailed": "Download failed"
+  },
+  "common": {
+    "loading": "Loading...",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "copy": "Copy",
+    "share": "Share",
+    "language": "Language",
+    "theme": "Theme",
+    "lightMode": "Light mode",
+    "darkMode": "Dark mode"
+  },
+  "pages": {
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "Everything you need to know about UnduhAja"
+    },
+    "about": {
+      "title": "About UnduhAja",
+      "subtitle": "Modern video downloader tool for Indonesia"
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "subtitle": "Your privacy is our priority"
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "subtitle": "Terms of using UnduhAja"
+    },
+    "blog": {
+      "title": "UnduhAja Blog",
+      "subtitle": "Tutorials, tips, and latest updates"
+    },
+    "changelog": {
+      "title": "Changelog",
+      "subtitle": "History of UnduhAja updates"
+    },
+    "docs": {
+      "title": "Documentation",
+      "subtitle": "Complete guide to using UnduhAja"
+    },
+    "guides": {
+      "title": "Guides",
+      "subtitle": "Step-by-step tutorials for various scenarios"
+    },
+    "api-docs": {
+      "title": "API Documentation",
+      "subtitle": "Integrate UnduhAja API for developers"
+    },
+    "dmca": {
+      "title": "DMCA Policy",
+      "subtitle": "Copyright content removal policy"
+    },
+    "account": {
+      "title": "My Account",
+      "subtitle": "Manage preferences and account history"
+    }
+  }
+}

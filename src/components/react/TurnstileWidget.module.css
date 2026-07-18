@@ -1,0 +1,31 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.widget {
+  display: flex;
+  justify-content: center;
+  min-height: 65px;
+}
+
+.widget:empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface-sunken);
+  border-radius: var(--radius-md);
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-xs);
+}
+
+.widget:empty::before {
+  content: 'Loading verification...';
+}
+
+.error {
+  color: var(--color-error);
+  font-size: var(--font-size-xs);
+  margin: 0;
+}
