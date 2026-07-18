@@ -2,6 +2,5 @@ User-agent: *
 Allow: /
 Disallow: /api/
 
-# Sitemaps
+# Sitemap (canonical URL — sitemap-index.xml)
 Sitemap: https://unduhaja.vercel.app/sitemap-index.xml
-Sitemap: https://unduhaja.vercel.app/sitemap-0.xml
