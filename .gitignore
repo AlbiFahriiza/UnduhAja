@@ -9,7 +9,7 @@ dist/
 .astro/
 .vercel/
 
-# Environment variables (NEVER commit these!)
+# Environment variables (NEVER commit!)
 .env
 .env.local
 .env.*.local
@@ -51,7 +51,6 @@ ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
 
-# Temporary files
+# Temp
 *.tmp
 *.temp
-.cache/

@@ -3,22 +3,29 @@
 > **Download Video Tanpa Ribet.** — Modern video downloader for YouTube & TikTok, built for Indonesia.
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
-[![Live Demo](https://img.shields.io/badge/Live-Demo-2563EB?style=flat&logo=vercel&logoColor=white)](https://unduhaja.vercel.app)
 
 **Languages:** [English](./README.en.md) | [Bahasa Indonesia](./README.id.md)
 
 ---
 
-## ✨ Features
+## 📖 What is UnduhAja?
 
-- 🎥 **YouTube & TikTok** — Download videos from both platforms
+UnduhAja is a modern, privacy-first video downloader platform that supports YouTube (including YouTube Shorts) and TikTok. Built with a focus on speed, simplicity, and user privacy — no ads, no tracking, no download history stored.
+
+Just paste a video URL, pick your preferred quality (up to 1080p60 for video, MP3 320kbps for audio), and download directly to your device. That's it.
+
+### Key Highlights
+
+- 🎥 **YouTube & TikTok** — Full support for both platforms
 - 🎵 **Audio extraction** — Convert videos to MP3 (320kbps) or M4A
-- 🌐 **Bilingual** — Full Indonesian & English support
-- 🌙 **Dark mode** — Easy on the eyes
+- 🌐 **Bilingual** — Full Indonesian & English support with URL prefix (/id/, /en/)
+- 🌙 **Dark mode** — Smooth theme toggle
 - 📱 **PWA** — Installable on mobile devices
 - 🔐 **Privacy-first** — No tracking, no analytics, no download history
-- ⚡ **Fast** — Built with Astro Islands for optimal performance
-- 🎨 **Modern UI** — Spring physics animations, enterprise-grade design
+- ⚡ **Fast** — Built with Astro Islands for optimal performance (~144KB JS gzipped)
+- 🎨 **Modern UI** — Custom RK4 analytical spring physics animations
+
+---
 
 ## 🚀 Quick Deploy
 
@@ -49,6 +56,8 @@ npm run dev
 ```
 
 Open [http://localhost:4321](http://localhost:4321) in your browser.
+
+---
 
 ## 📋 Setup Guide
 
@@ -132,6 +141,8 @@ npm run preview
 vercel --prod
 ```
 
+---
+
 ## 🛠️ Tech Stack
 
 | Layer | Technology | Why |
@@ -144,6 +155,8 @@ vercel --prod
 | Icons | [Lucide](https://lucide.dev) | Modern, lightweight |
 | Toasts | [Sonner](https://sonner.emilkowal.ski) | Beautiful notifications |
 | Fonts | Plus Jakarta Sans | Self-hosted for privacy |
+
+---
 
 ## 📁 Project Structure
 
@@ -164,30 +177,38 @@ unduhaja/
 │   ├── migrations/          # Database schema
 │   └── functions/           # Edge Functions
 ├── public/                  # Static assets (icons, fonts, manifest)
+├── unduhaja-worker/         # Cloudflare Worker (video API)
 ├── scripts/                 # Helper scripts
 ├── astro.config.mjs         # Astro configuration
 ├── vercel.json              # Security headers
 └── package.json
 ```
 
+---
+
 ## 🎨 Design System
 
 - **Primary color:** `#2563EB` (Blue)
 - **Accent color:** `#7C3AED` (Violet)
 - **Background:** `#F8FAFC` (Light) / `#0B0F1A` (Dark)
-- **Typography:** Plus Jakarta Sans (5 weights)
+- **Typography:** Plus Jakarta Sans (5 weights: 400, 500, 600, 700, 800)
 - **Border radius:** 8px / 12px / 16px / 20px
-- **Spring profile:** Bouncy iOS (stiffness 250, damping 22)
+- **Spring profile:** Bouncy iOS (stiffness 250, damping 22, mass 1.0)
 
-## 🔒 Security
+---
+
+## 🔒 Security Features
 
 - ✅ Content Security Policy (CSP) headers
 - ✅ HSTS, X-Frame-Options, X-Content-Type-Options
-- ✅ Cloudflare Turnstile captcha on auth
+- ✅ Cloudflare Turnstile captcha on auth endpoints
 - ✅ Rate limiting (5/hr guest, 50/hr authenticated)
 - ✅ Row Level Security (RLS) on all database tables
 - ✅ httpOnly + Secure cookies
+- ✅ Honeypot anti-bot field
 - ✅ No tracking, no analytics, no third-party scripts
+
+---
 
 ## 📊 Performance
 
@@ -195,32 +216,58 @@ unduhaja/
 - **Lighthouse target:** 95+ across all categories
 - **Zero JS** on static content pages
 - **Code-split** React islands automatically
+- **Fonts:** Self-hosted woff2 (5 weights)
+
+---
 
 ## 🆓 Cost
 
 **$0/month** on free tiers:
 
-| Service | Free Tier Limit | UnduhAja Usage |
-|---------|----------------|----------------|
-| Vercel | Unlimited static, 100GB BW | ~1GB typical |
+| Service | Free Tier Limit | Typical Usage |
+|---------|----------------|---------------|
+| Vercel | Unlimited static, 100GB BW | ~1GB |
 | Supabase | 500MB DB, 50k MAU | ~50MB, ~1k users |
 | Cloudflare Workers | 100k req/day | ~3k req/day |
 
-## 🌐 Pages
+---
 
-- `/` — Auto-redirect based on browser language
-- `/id/` — Landing page (Indonesian)
-- `/en/` — Landing page (English)
-- `/id/faq` — Frequently asked questions
-- `/id/blog` — Blog with tutorials
-- `/id/docs` — Documentation
-- `/id/guides` — Step-by-step guides
-- `/id/changelog` — Release history
-- `/id/status` — Real-time service status
-- `/id/account` — User account dashboard
-- `/id/privacy` — Privacy policy
-- `/id/terms` — Terms of service
-- `/id/dmca` — DMCA policy
+## 🌐 Pages (28+ bilingual)
+
+| Page | Description |
+|------|-------------|
+| `/` | Auto-redirect based on browser language |
+| `/id/` `/en/` | Landing page |
+| `/id/faq` `/en/faq` | Frequently asked questions |
+| `/id/blog` `/en/blog` | Blog with tutorials |
+| `/id/blog/[slug]` | Blog post detail |
+| `/id/docs` `/en/docs` | Documentation |
+| `/id/guides` `/en/guides` | Step-by-step guides |
+| `/id/changelog` `/en/changelog` | Release history |
+| `/id/api-docs` `/en/api-docs` | API reference |
+| `/id/status` `/en/status` | Real-time service status |
+| `/id/account` `/en/account` | User account dashboard |
+| `/id/privacy` `/en/privacy` | Privacy policy |
+| `/id/terms` `/en/terms` | Terms of service |
+| `/id/dmca` `/en/dmca` | DMCA policy |
+| `/id/auth/reset-password` | Password reset |
+
+---
+
+## 🔍 SEO Features
+
+- ✅ Auto sitemap with i18n (hreflang alternates)
+- ✅ robots.txt with sitemap references
+- ✅ Canonical URLs per page
+- ✅ hreflang alternate links in HTML head
+- ✅ Open Graph + Twitter Card meta tags
+- ✅ JSON-LD structured data (Organization, FAQPage, Blog, BlogPosting)
+- ✅ Enhanced sitemap (lastmod, priority, changefreq)
+- ✅ Mobile-friendly responsive design
+- ✅ HTTPS enforced
+- ✅ Fast LCP (< 1s)
+
+---
 
 ## 🤝 Contributing
 
@@ -231,14 +278,20 @@ This is a personal project, but suggestions are welcome! Open an issue for:
 - Translation improvements
 - Documentation corrections
 
+---
+
 ## 📝 License
 
 All rights reserved. Source code is provided for reference only.
+
+---
 
 ## 👨‍💻 Author
 
 **Albi Fahriza**
 - Project creator & maintainer
+
+---
 
 ## 🙏 Acknowledgments
 

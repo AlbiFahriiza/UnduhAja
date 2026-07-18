@@ -29,6 +29,13 @@ const siteUrl = Astro.site ?? new URL('https://unduhaja.vercel.app');
 const canonicalURL = new URL(Astro.url.pathname, siteUrl).toString();
 const ogImage = new URL(image, siteUrl).toString();
 
+// Compute hreflang alternate URLs for bilingual SEO
+const pathWithoutLang = Astro.url.pathname.replace(/^\/(id|en)\//, '/');
+const cleanPath = pathWithoutLang === '/' ? '/' : pathWithoutLang;
+const hreflangId = new URL(`/id${cleanPath}`, siteUrl).toString();
+const hreflangEn = new URL(`/en${cleanPath}`, siteUrl).toString();
+const hreflangDefault = siteUrl.toString();
+
 // Structured data
 const orgSchema = {
   '@context': 'https://schema.org',
@@ -56,6 +63,11 @@ const orgSchema = {
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <!-- hreflang alternate links (for Google bilingual SEO) -->
+    <link rel="alternate" hreflang="id-ID" href={hreflangId} />
+    <link rel="alternate" hreflang="en-US" href={hreflangEn} />
+    <link rel="alternate" hreflang="x-default" href={hreflangDefault} />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />

@@ -78,6 +78,30 @@ export default defineConfig({
           en: 'en-US',
         },
       },
+      // Add lastmod to all URLs (Google prefers fresh sitemaps)
+      lastmod: new Date(),
+      // Custom filter to exclude API routes
+      filter: (page) => !page.includes('/api/'),
+      // Custom serialize to add priority and changefreq
+      serialize(item) {
+        if (item.url.includes('/blog/')) {
+          item.changefreq = 'weekly';
+          item.priority = 0.8;
+        } else if (item.url.endsWith('/id/') || item.url.endsWith('/en/')) {
+          item.changefreq = 'daily';
+          item.priority = 1.0;
+        } else if (item.url.includes('/faq') || item.url.includes('/docs') || item.url.includes('/guides')) {
+          item.changefreq = 'monthly';
+          item.priority = 0.7;
+        } else if (item.url.includes('/privacy') || item.url.includes('/terms') || item.url.includes('/dmca')) {
+          item.changefreq = 'yearly';
+          item.priority = 0.3;
+        } else {
+          item.changefreq = 'monthly';
+          item.priority = 0.6;
+        }
+        return item;
+      },
     }),
   ],
   vite: {
