@@ -17,7 +17,7 @@
  *   - Turnstile widget on signup
  */
 import { useEffect, useRef, useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabase } from '@/lib/supabase-browser';
 import { Mail, Lock, X, Eye, EyeOff, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useReducedMotion } from './hooks/useReducedMotion';
@@ -61,11 +61,8 @@ export interface AuthModalProps {
   };
 }
 
-const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: { persistSession: true, autoRefreshToken: true, flowType: 'pkce', storageKey: 'unduhaja-auth' },
-});
+const supabase = getSupabase();
+// (removed duplicate createClient)
 
 export function AuthModal({
   open,

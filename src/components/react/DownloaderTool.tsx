@@ -15,7 +15,7 @@
  *   - download phase: idle, loading, success, error
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { createClient, type Session } from '@supabase/supabase-js';
+import { getSupabase, type Session } from '@/lib/supabase-browser';
 import { UrlInput, type UrlInputStatus } from './UrlInput';
 import { VideoPreview, type VideoMetadata } from './VideoPreview';
 import {
@@ -32,11 +32,10 @@ import { Toaster, toast as sonnerToast } from 'sonner';
 import styles from './DownloaderTool.module.css';
 
 // Supabase client (singleton, browser-only)
-const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: { persistSession: true, autoRefreshToken: true, flowType: 'pkce', storageKey: 'unduhaja-auth' },
-});
+
+
+const supabase = getSupabase();
+// (removed duplicate createClient)
 
 export interface DownloaderToolProps {
   lang: 'id' | 'en';
@@ -287,14 +286,14 @@ function DownloaderToolInner({ lang, translations }: DownloaderToolProps) {
       }
 
       // Call Supabase Edge Function directly
-      const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
-      const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+      const sbUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+      const sbKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
-      const res = await fetch(`${supabaseUrl}/functions/v1/extract`, {
+      const res = await fetch(`${sbUrl}/functions/v1/extract`, {
         method: 'POST',
         headers: {
           ...headers,
-          apikey: supabaseAnonKey,
+          apikey: sbKey,
         },
         body: JSON.stringify({ url: trimmed }),
       });

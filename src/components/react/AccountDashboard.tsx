@@ -11,16 +11,13 @@
  * If not logged in: show CTA to sign in.
  */
 import { useEffect, useState } from 'react';
-import { createClient, type User } from '@supabase/supabase-js';
+import { getSupabase, type User } from '@/lib/supabase-browser';
 import { User as UserIcon, Mail, LogOut, Palette, Globe, Loader2, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import styles from './AccountDashboard.module.css';
 
-const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: { persistSession: true, autoRefreshToken: true, flowType: 'pkce', storageKey: 'unduhaja-auth' },
-});
+const supabase = getSupabase();
+// (removed duplicate createClient)
 
 export interface AccountDashboardProps {
   lang: 'id' | 'en';

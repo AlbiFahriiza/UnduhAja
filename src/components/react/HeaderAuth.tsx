@@ -9,18 +9,15 @@
  */
 import { useEffect, useRef, useState } from 'react';
 import { LogIn, User, LogOut, ChevronDown } from 'lucide-react';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabase } from '@/lib/supabase-browser';
 import { toast } from 'sonner';
 import { AuthModal } from './AuthModal';
 import { useReducedMotion } from './hooks/useReducedMotion';
 import { BOUNCY_SPRING, springAtTime, springDuration } from '@/lib/spring';
 import styles from './HeaderAuth.module.css';
 
-const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: { persistSession: true, autoRefreshToken: true, flowType: 'pkce', storageKey: 'unduhaja-auth' },
-});
+const supabase = getSupabase();
+// (removed duplicate createClient)
 
 export interface HeaderAuthProps {
   lang: 'id' | 'en';

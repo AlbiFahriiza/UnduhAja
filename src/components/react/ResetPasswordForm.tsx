@@ -2,16 +2,13 @@
  * ResetPasswordForm — Form to update password after magic link redirect.
  */
 import { useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabase } from '@/lib/supabase-browser';
 import { Lock, Loader2, AlertCircle, CheckCircle2, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import styles from './ResetPasswordForm.module.css';
 
-const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: { persistSession: true, autoRefreshToken: true, flowType: 'pkce', storageKey: 'unduhaja-auth' },
-});
+const supabase = getSupabase();
+// (removed duplicate createClient)
 
 export interface ResetPasswordFormProps {
   lang: 'id' | 'en';

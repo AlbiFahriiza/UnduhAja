@@ -21,9 +21,4 @@ echo "your-random-api-key" | npx wrangler secret put API_KEY
 - `GET /api/health` — Health check (public)
 - `POST /api/json` — Main API (requires `X-API-Key` header)
 
-## Environment
-
-Set in Cloudflare dashboard or via `wrangler secret`:
-- `API_KEY` — Shared secret between Worker and Supabase Edge Functions
-
 See main project [README](../README.md) for full setup guide.
