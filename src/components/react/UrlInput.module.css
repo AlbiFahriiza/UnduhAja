@@ -6,6 +6,7 @@
   position: relative;
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   gap: var(--space-3);
   width: 100%;
 }
