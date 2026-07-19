@@ -1,10 +1,10 @@
 /* ============================================
-   VideoPreview — Enterprise-grade card
+   VideoPreview — Enhanced enterprise card
    ============================================ */
 
 .card {
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
+  grid-template-columns: 1.3fr 1fr;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
@@ -15,29 +15,20 @@
   margin: 0 auto;
 }
 
+/* ============================================
+   Media Section — 16:9 aspect ratio
+   ============================================ */
 .mediaSection {
   position: relative;
-  background: var(--color-surface-sunken);
-  min-height: 320px;
-}
-
-.playerWrap {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  min-height: 320px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: #000;
+  aspect-ratio: 16 / 9;
 }
 
 .poster {
   position: relative;
   width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
   background: #000;
   border: none;
   cursor: pointer;
@@ -49,11 +40,11 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform var(--duration-slow) ease;
+  transition: transform 0.4s ease;
 }
 
 .poster:hover .thumbnail {
-  transform: scale(1.02);
+  transform: scale(1.03);
 }
 
 .playButton {
@@ -64,27 +55,26 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 72px;
-  height: 72px;
+  width: 64px;
+  height: 64px;
   color: white;
-  background: rgba(0, 0, 0, 0.7);
-  border: 2px solid rgba(255, 255, 255, 0.9);
+  background: rgba(0, 0, 0, 0.75);
+  border: 2px solid rgba(255, 255, 255, 0.85);
   border-radius: var(--radius-full);
-  transition: all var(--duration-fast) ease;
-  backdrop-filter: none; /* Zero blur policy */
+  transition: all 0.2s ease;
 }
 
 .poster:hover .playButton {
   background: var(--color-primary);
   border-color: var(--color-primary);
-  transform: translate(-50%, -50%) scale(1.08);
+  transform: translate(-50%, -50%) scale(1.1);
 }
 
 .durationBadge {
   position: absolute;
-  bottom: var(--space-3);
-  right: var(--space-3);
-  padding: 4px var(--space-2);
+  bottom: var(--space-2);
+  right: var(--space-2);
+  padding: 3px var(--space-2);
   background: rgba(0, 0, 0, 0.85);
   color: white;
   font-family: var(--font-mono);
@@ -96,7 +86,7 @@
 .iframe {
   width: 100%;
   height: 100%;
-  min-height: 320px;
+  aspect-ratio: 16 / 9;
   border: none;
 }
 
@@ -106,35 +96,35 @@
 .infoSection {
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
-  padding: var(--space-6);
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-6);
 }
 
 .header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: var(--space-4);
+  gap: var(--space-3);
 }
 
 .title {
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-base);
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-snug);
   color: var(--color-text);
   letter-spacing: var(--tracking-tight);
   margin: 0;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
 .platformBadge {
   flex-shrink: 0;
-  padding: 4px var(--space-2);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
+  padding: 3px var(--space-2);
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
   border-radius: var(--radius-sm);
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
@@ -151,14 +141,14 @@
 }
 
 /* ============================================
-   Meta Row
+   Meta Row — Creator + Stats
    ============================================ */
 .metaRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-4);
-  padding: var(--space-3) 0;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
   border-top: 1px solid var(--color-border-subtle);
   border-bottom: 1px solid var(--color-border-subtle);
 }
@@ -166,14 +156,14 @@
 .creator {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-2);
   min-width: 0;
 }
 
 .avatar,
 .avatarPlaceholder {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: var(--radius-full);
   flex-shrink: 0;
 }
@@ -189,7 +179,7 @@
 .creatorInfo {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
   min-width: 0;
 }
 
@@ -240,7 +230,7 @@
   gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
   background: var(--color-surface-sunken);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   color: var(--color-text-secondary);
   font-size: var(--font-size-xs);
 }
@@ -252,7 +242,7 @@
 }
 
 /* ============================================
-   Description
+   Description — HTML + Markdown rendered
    ============================================ */
 .description {
   display: flex;
@@ -274,16 +264,30 @@
   font-size: var(--font-size-sm);
   line-height: var(--line-height-relaxed);
   margin: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
+  max-height: 100px;
   overflow: hidden;
+  transition: max-height 0.3s ease;
+  word-break: break-word;
 }
 
 .descriptionText.expanded {
-  -webkit-line-clamp: unset;
-  display: block;
-  overflow: visible;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+/* Description inner HTML styles */
+.descriptionText :global(a) {
+  color: var(--color-primary);
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.descriptionText :global(a:hover) {
+  text-decoration: underline;
+}
+
+.descriptionText :global(br) {
+  line-height: 1.6;
 }
 
 .readMore {
@@ -295,7 +299,7 @@
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
-  transition: color var(--duration-fast) ease;
+  transition: color 0.15s ease;
 }
 
 .readMore:hover {
@@ -308,28 +312,32 @@
 @media (max-width: 768px) {
   .card {
     grid-template-columns: 1fr;
+    max-width: 100%;
   }
 
-  .mediaSection,
-  .playerWrap,
-  .iframe {
-    min-height: 240px;
+  .mediaSection {
+    aspect-ratio: 16 / 9;
   }
 
   .infoSection {
-    padding: var(--space-5);
-    gap: var(--space-4);
+    padding: var(--space-4) var(--space-5);
+    gap: var(--space-3);
   }
 
   .metaRow {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--space-3);
+    gap: var(--space-2);
   }
 
   .stats {
     flex-wrap: wrap;
     gap: var(--space-2);
+  }
+
+  .title {
+    font-size: var(--font-size-base);
+    -webkit-line-clamp: 3;
   }
 }
 
@@ -341,5 +349,15 @@
 
   .infoSection {
     padding: var(--space-4);
+  }
+
+  .title {
+    font-size: var(--font-size-sm);
+  }
+
+  .avatar,
+  .avatarPlaceholder {
+    width: 32px;
+    height: 32px;
   }
 }

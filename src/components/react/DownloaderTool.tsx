@@ -542,11 +542,29 @@ function PreviewSkeleton() {
     <div className={styles.skeleton} aria-hidden="true">
       <div className={styles.skeletonMedia} />
       <div className={styles.skeletonInfo}>
+        {/* Title */}
         <div className={`${styles.skeletonLine} ${styles.skeletonTitle}`} />
-        <div className={`${styles.skeletonLine} ${styles.skeletonMeta}`} />
-        <div className={`${styles.skeletonLine} ${styles.skeletonText}`} />
-        <div className={`${styles.skeletonLine} ${styles.skeletonText}`} />
-        <div className={`${styles.skeletonLine} ${styles.skeletonText}`} />
+        <div className={`${styles.skeletonLine} ${styles.skeletonTitleSecond}`} />
+
+        {/* Meta row: avatar + creator + stats */}
+        <div className={styles.skeletonMetaRow}>
+          <div className={styles.skeletonAvatar} />
+          <div>
+            <div className={`${styles.skeletonLine} ${styles.skeletonCreatorName}`} />
+            <div className={`${styles.skeletonLine} ${styles.skeletonCreatorLabel}`} />
+          </div>
+          <div className={styles.skeletonStats}>
+            <div className={`${styles.skeletonLine} ${styles.skeletonStat}`} />
+            <div className={`${styles.skeletonLine} ${styles.skeletonStat}`} />
+            <div className={`${styles.skeletonLine} ${styles.skeletonStat}`} />
+          </div>
+        </div>
+
+        {/* Description */}
+        <div className={`${styles.skeletonLine} ${styles.skeletonDescTitle}`} />
+        <div className={`${styles.skeletonLine} ${styles.skeletonDescLine}`} />
+        <div className={`${styles.skeletonLine} ${styles.skeletonDescLine}`} />
+        <div className={`${styles.skeletonLine} ${styles.skeletonDescLineShort}`} />
       </div>
     </div>
   );

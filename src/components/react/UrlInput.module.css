@@ -16,26 +16,21 @@
   display: flex;
   align-items: center;
   flex: 1;
+  min-width: 0;
   background: var(--color-surface);
-  border: 1.5px solid var(--color-border);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  transition: border-color var(--duration-fast) ease,
-              box-shadow var(--duration-fast) ease;
+  transition: border-color 0.2s ease;
   overflow: hidden;
 }
 
-/* Clean focus state — no weird hover, just smooth border + subtle ring */
+/* Clean focus — just border color change, no ring */
 .form:focus-within .inputWrap {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
 .form.status--invalid .inputWrap {
   border-color: var(--color-error);
-}
-
-.form.status--invalid:focus-within .inputWrap {
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
 }
 
 .form.status--valid .inputWrap {

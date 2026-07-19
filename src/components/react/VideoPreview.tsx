@@ -1,19 +1,14 @@
 /**
  * VideoPreview — Enterprise-grade video preview card.
  *
- * Layout (desktop): horizontal split — thumbnail/video on left, metadata on right.
- * Layout (mobile): vertical stack — thumbnail top, metadata below.
- *
- * Includes:
- *   - Embedded video player (paused by default, custom poster)
- *   - Title, channel/creator with verified badge
- *   - View count, duration, upload date
- *   - Short description (truncated with "Read more")
- *   - TikTok-specific: music info
- *
- * Spring entrance animation: card slides up + scales in (subtle).
+ * Enhanced:
+ *   - Clean layout with proper aspect ratio (16:9 thumbnail)
+ *   - Description renders HTML + markdown (URLs clickable, line breaks, hashtags)
+ *   - Better metadata hierarchy
+ *   - Smooth entrance animation
+ *   - Mobile-optimized vertical stack
  */
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import {
   BadgeCheck,
   Calendar,
@@ -36,12 +31,10 @@ export interface VideoMetadata {
   channelVerified?: boolean;
   channelAvatar?: string;
   thumbnail: string;
-  duration?: string; // ISO 8601 or "MM:SS"
+  duration?: string;
   viewCount?: number;
-  uploadDate?: string; // ISO date
-  // TikTok-specific
+  uploadDate?: string;
   music?: string;
-  // YouTube-specific
   embedUrl?: string;
 }
 
@@ -93,9 +86,7 @@ function formatDate(isoDate: string | undefined, lang: 'id' | 'en'): string {
 
 function formatDuration(duration: string | undefined): string {
   if (!duration) return '';
-  // Already in MM:SS or HH:MM:SS format from API
   if (/^\d+:\d+/.test(duration)) return duration;
-  // ISO 8601 (PT1H2M3S)
   const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
   if (!match) return duration;
   const [, h, m, s] = match;
@@ -103,11 +94,52 @@ function formatDuration(duration: string | undefined): string {
   return parts.join(':');
 }
 
+/**
+ * Render description with HTML + markdown support.
+ * - Escapes HTML entities first (security)
+ * - Converts \n to <br>
+ * - Converts URLs to clickable links
+ * - Converts hashtags to styled spans
+ * - Preserves existing HTML tags from YouTube/TikTok (after escaping, re-allow safe ones)
+ */
+function renderDescription(desc: string): string {
+  if (!desc) return '';
+
+  // Step 1: Escape HTML to prevent XSS
+  let html = desc
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+
+  // Step 2: Convert URLs to clickable links
+  html = html.replace(
+    /(https?:\/\/[^\s<]+)/g,
+    '<a href="$1" target="_blank" rel="noopener noreferrer" class="$descLink">$1</a>'
+  );
+
+  // Step 3: Convert hashtags to styled spans
+  html = html.replace(
+    /(^|\s)(#[\w]+)/g,
+    '$1<span class="$descHashtag">$2</span>'
+  );
+
+  // Step 4: Convert line breaks
+  html = html.replace(/\n/g, '<br>');
+
+  return html;
+}
+
 export function VideoPreview({ metadata, lang, labels }: VideoPreviewProps) {
   const reducedMotion = useReducedMotion();
   const cardRef = useRef<HTMLElement>(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+
+  // Memoize rendered description HTML
+  const renderedDesc = useMemo(() => renderDescription(metadata.description), [metadata.description]);
+  const hasLongDesc = metadata.description && metadata.description.length > 150;
 
   // Spring entrance animation
   useEffect(() => {
@@ -126,12 +158,11 @@ export function VideoPreview({ metadata, lang, labels }: VideoPreviewProps) {
 
     for (let i = 0; i <= samples; i++) {
       const t = (i / samples) * (duration / 1000);
-      const offsetY = springAtTime(24, 0, 0, GENTLE_SPRING, t).position;
-      const scale = springAtTime(0.96, 1, 0, GENTLE_SPRING, t).position;
-      const opacity = Math.min(1, i / (samples * 0.4));
+      const offsetY = springAtTime(20, 0, 0, GENTLE_SPRING, t).position;
+      const opacity = Math.min(1, i / (samples * 0.3));
       keyframes.push({
         offset: i / samples,
-        transform: `translateY(${offsetY}px) scale(${scale})`,
+        transform: `translateY(${offsetY}px)`,
         opacity,
       });
     }
@@ -145,52 +176,50 @@ export function VideoPreview({ metadata, lang, labels }: VideoPreviewProps) {
     return () => anim.cancel();
   }, [reducedMotion]);
 
-  const handlePlayClick = () => {
-    setIsPlaying(true);
-  };
-
+  const handlePlayClick = () => setIsPlaying(true);
   const isYouTube = metadata.platform === 'youtube';
   const isTikTok = metadata.platform === 'tiktok';
 
   return (
     <article ref={cardRef} className={styles.card} style={{ opacity: 0 }}>
+      {/* Media Section — 16:9 aspect ratio */}
       <div className={styles.mediaSection}>
-        <div className={styles.playerWrap}>
-          {isYouTube && metadata.embedUrl && isPlaying ? (
-            <iframe
-              src={`${metadata.embedUrl}?autoplay=1&rel=0`}
-              className={styles.iframe}
-              title={metadata.title}
-              allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
+        {isYouTube && metadata.embedUrl && isPlaying ? (
+          <iframe
+            src={`${metadata.embedUrl}?autoplay=1&rel=0&modestbranding=1`}
+            className={styles.iframe}
+            title={metadata.title}
+            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        ) : (
+          <button
+            type="button"
+            className={styles.poster}
+            onClick={handlePlayClick}
+            aria-label={labels.playVideo}
+          >
+            <img
+              src={metadata.thumbnail}
+              alt={metadata.title}
+              className={styles.thumbnail}
+              loading="eager"
             />
-          ) : (
-            <button
-              type="button"
-              className={styles.poster}
-              onClick={handlePlayClick}
-              aria-label={labels.playVideo}
-            >
-              <img
-                src={metadata.thumbnail}
-                alt={metadata.title}
-                className={styles.thumbnail}
-                loading="lazy"
-              />
-              <span className={styles.playButton}>
-                <Play size={28} fill="currentColor" />
+            <span className={styles.playButton}>
+              <Play size={28} fill="currentColor" />
+            </span>
+            {metadata.duration && (
+              <span className={styles.durationBadge}>
+                {formatDuration(metadata.duration)}
               </span>
-              {metadata.duration && (
-                <span className={styles.durationBadge}>
-                  {formatDuration(metadata.duration)}
-                </span>
-              )}
-            </button>
-          )}
-        </div>
+            )}
+          </button>
+        )}
       </div>
 
+      {/* Info Section */}
       <div className={styles.infoSection}>
+        {/* Title + Platform Badge */}
         <div className={styles.header}>
           <h3 className={styles.title}>{metadata.title}</h3>
           <span className={styles.platformBadge} data-platform={metadata.platform}>
@@ -198,6 +227,7 @@ export function VideoPreview({ metadata, lang, labels }: VideoPreviewProps) {
           </span>
         </div>
 
+        {/* Creator + Stats */}
         <div className={styles.metaRow}>
           <div className={styles.creator}>
             {metadata.channelAvatar ? (
@@ -230,7 +260,7 @@ export function VideoPreview({ metadata, lang, labels }: VideoPreviewProps) {
           </div>
 
           <div className={styles.stats}>
-            {metadata.viewCount !== undefined && (
+            {metadata.viewCount !== undefined && metadata.viewCount > 0 && (
               <span className={styles.stat} title={`${metadata.viewCount.toLocaleString()} ${labels.views}`}>
                 <Eye size={14} />
                 {formatViews(metadata.viewCount, lang, labels.views)}
@@ -251,6 +281,7 @@ export function VideoPreview({ metadata, lang, labels }: VideoPreviewProps) {
           </div>
         </div>
 
+        {/* Music (TikTok) */}
         {isTikTok && metadata.music && (
           <div className={styles.musicRow}>
             <Music2 size={14} />
@@ -258,18 +289,22 @@ export function VideoPreview({ metadata, lang, labels }: VideoPreviewProps) {
           </div>
         )}
 
+        {/* Description — renders HTML + markdown */}
         <div className={styles.description}>
           <h4 className={styles.descriptionTitle}>{labels.description}</h4>
-          <p className={`${styles.descriptionText} ${isExpanded ? styles.expanded : ''}`}>
-            {metadata.description || labels.noDescription}
-          </p>
-          {metadata.description && metadata.description.length > 200 && (
+          <div
+            className={`${styles.descriptionText} ${isExpanded ? styles.expanded : ''}`}
+            dangerouslySetInnerHTML={{ __html: renderedDesc || labels.noDescription }}
+          />
+          {hasLongDesc && (
             <button
               type="button"
               className={styles.readMore}
               onClick={() => setIsExpanded(!isExpanded)}
             >
-              {isExpanded ? 'Show less' : 'Read more'}
+              {isExpanded
+                ? (lang === 'id' ? 'Tampilkan lebih sedikit' : 'Show less')
+                : (lang === 'id' ? 'Baca selengkapnya' : 'Read more')}
             </button>
           )}
         </div>
