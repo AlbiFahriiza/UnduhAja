@@ -8,24 +8,17 @@
  *   → Loop
  *
  * Animation per character:
- *   - Fade OUT: left → right, fast (40ms per char)
- *   - Fade IN: right → left, with overshoot spring (35ms per char)
- *
- * Implementation:
- *   - Each character is a <span> with its own animation
- *   - Uses Web Animations API + analytical spring for overshoot
- *   - Falls back to instant when prefers-reduced-motion
+ *   - Fade IN: LEFT → RIGHT (first char appears first), with spring overshoot
+ *   - Fade OUT: RIGHT → LEFT (last char disappears first), fast
  *
  * Drag & drop URL support.
  * Ctrl+V anywhere focuses input.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Clipboard, Link2, Loader2, X } from 'lucide-react';
-import { useSpring } from './hooks/useSpring';
 import { useReducedMotion } from './hooks/useReducedMotion';
 import {
   BOUNCY_SPRING,
-  DEFAULT_SPRING,
   springAtTime,
   springDuration,
   type SpringConfig,
@@ -56,7 +49,9 @@ export interface UrlInputProps {
 type Phase = 'prompt' | 'tiktok' | 'youtube';
 
 const PHASE_ORDER: Phase[] = ['prompt', 'tiktok', 'youtube'];
-const PHASE_DURATION_MS = 3500; // Show each phase for 3.5s before cycling
+const PHASE_DURATION_MS = 3500;
+const CHAR_OUT_DELAY = 40; // ms per char (outgoing)
+const CHAR_IN_DELAY = 35;  // ms per char (incoming)
 
 export function UrlInput(props: UrlInputProps) {
   const {
@@ -79,10 +74,10 @@ export function UrlInput(props: UrlInputProps) {
   } = props;
 
   const reducedMotion = useReducedMotion();
-  const spring = useSpring({ reducedMotion });
 
   const inputRef = useRef<HTMLInputElement>(null);
   const placeholderRef = useRef<HTMLSpanElement>(null);
+  const isAnimatingOutRef = useRef(false);
 
   const [phaseIndex, setPhaseIndex] = useState(0);
   const [isFocused, setIsFocused] = useState(false);
@@ -98,20 +93,58 @@ export function UrlInput(props: UrlInputProps) {
   const currentPhase = PHASE_ORDER[phaseIndex];
 
   // ============================================
-  // Placeholder cycling with per-character animation
+  // Placeholder cycling — animate OUT then change phase
   // ============================================
   useEffect(() => {
-    // Don't cycle if input is focused or has value
     if (isFocused || value) return;
 
     const cycleTimeout = setTimeout(() => {
-      setPhaseIndex((prev) => (prev + 1) % PHASE_ORDER.length);
+      const container = placeholderRef.current;
+      if (!container || reducedMotion) {
+        setPhaseIndex((prev) => (prev + 1) % PHASE_ORDER.length);
+        return;
+      }
+
+      // Get current char spans
+      const chars = Array.from(container.querySelectorAll(`.${styles.char}`)) as HTMLSpanElement[];
+      if (chars.length === 0) {
+        setPhaseIndex((prev) => (prev + 1) % PHASE_ORDER.length);
+        return;
+      }
+
+      isAnimatingOutRef.current = true;
+
+      // Animate OUT: RIGHT → LEFT (last char disappears first)
+      const totalChars = chars.length;
+      chars.forEach((char, i) => {
+        // Right to left: last char (index = totalChars-1) starts first
+        const reverseIndex = totalChars - 1 - i;
+        const delay = reverseIndex * CHAR_OUT_DELAY;
+
+        setTimeout(() => {
+          if (!char.isConnected) return;
+          char.animate(
+            [
+              { opacity: 1, transform: 'translateY(0px)', offset: 0 },
+              { opacity: 0, transform: 'translateY(4px)', offset: 1 },
+            ],
+            { duration: 150, easing: 'ease-out', fill: 'forwards' }
+          );
+        }, delay);
+      });
+
+      // After all chars animated out, change phase
+      const totalOutTime = totalChars * CHAR_OUT_DELAY + 200;
+      setTimeout(() => {
+        isAnimatingOutRef.current = false;
+        setPhaseIndex((prev) => (prev + 1) % PHASE_ORDER.length);
+      }, totalOutTime);
     }, PHASE_DURATION_MS);
 
     return () => clearTimeout(cycleTimeout);
-  }, [phaseIndex, isFocused, value]);
+  }, [phaseIndex, isFocused, value, reducedMotion]);
 
-  // Animate placeholder change with per-char spring
+  // Animate IN: LEFT → RIGHT (first char appears first) with spring overshoot
   useEffect(() => {
     if (reducedMotion || isFocused || value) return;
 
@@ -124,7 +157,7 @@ export function UrlInput(props: UrlInputProps) {
     container.innerHTML = '';
     const chars: HTMLSpanElement[] = [];
 
-    text.split('').forEach((char, i) => {
+    text.split('').forEach((char) => {
       const span = document.createElement('span');
       span.textContent = char === ' ' ? '\u00A0' : char;
       span.className = styles.char;
@@ -135,21 +168,17 @@ export function UrlInput(props: UrlInputProps) {
       chars.push(span);
     });
 
-    // Stagger animation: right → left for incoming
-    // Use spring for each char with delay based on (length - i)
+    // Stagger animation: LEFT → RIGHT (first char starts first)
     const totalChars = chars.length;
-    const charDelay = 35; // ms per char (incoming)
 
     chars.forEach((char, i) => {
-      // Right-to-left: last character starts first
-      const reverseIndex = totalChars - 1 - i;
-      const delay = reverseIndex * charDelay;
+      // Left to right: first char (index 0) starts first
+      const delay = i * CHAR_IN_DELAY;
 
       setTimeout(() => {
         if (!char.isConnected) return;
 
-        // Spring animation: translateY 6px → 0, opacity 0 → 1
-        // Use BOUNCY_SPRING for overshoot
+        // Spring animation: translateY 6px → 0 (from bottom to top), opacity 0 → 1
         char.animate(
           [
             { transform: 'translateY(6px)', opacity: 0, offset: 0 },
@@ -157,17 +186,7 @@ export function UrlInput(props: UrlInputProps) {
             { transform: 'translateY(0px)', opacity: 1, offset: 1 },
           ],
           {
-            duration: reducedMotion ? 0 : 400,
-            easing: 'linear',
-            fill: 'forwards',
-          }
-        );
-
-        // Fade in opacity (linear, fast)
-        char.animate(
-          [{ opacity: 0, offset: 0 }, { opacity: 1, offset: 1 }],
-          {
-            duration: 200,
+            duration: 400,
             easing: 'linear',
             fill: 'forwards',
           }
@@ -176,23 +195,16 @@ export function UrlInput(props: UrlInputProps) {
     });
 
     return () => {
-      // Cleanup: clear animations on unmount/phase change
       chars.forEach((c) => c.getAnimations().forEach((a) => a.cancel()));
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPhase, reducedMotion, isFocused, value]);
-
-  // Animate OUT (fade out left → right) before phase change
-  // Note: For simplicity, we just clear + animate IN. The OUT animation
-  // would require a pre-phase-change hook. Leaving as enhancement.
-  // For now, the OUT happens naturally because we replace innerHTML.
 
   // ============================================
   // Keyboard shortcut: Ctrl+V focuses input
   // ============================================
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Skip if user is typing in another input/textarea
       const target = e.target as HTMLElement;
       if (
         target &&
@@ -202,13 +214,10 @@ export function UrlInput(props: UrlInputProps) {
       ) {
         return;
       }
-
-      // Ctrl+V / Cmd+V → focus input
       if ((e.ctrlKey || e.metaKey) && e.key === 'v') {
         inputRef.current?.focus();
       }
     };
-
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
@@ -220,7 +229,6 @@ export function UrlInput(props: UrlInputProps) {
     (url: string): 'youtube' | 'tiktok' | null => {
       const trimmed = url.trim();
       if (!trimmed) return null;
-      // YouTube patterns
       const ytPatterns = [
         /^https?:\/\/(www\.)?youtube\.com\/watch\?v=/i,
         /^https?:\/\/youtu\.be\//i,
@@ -228,7 +236,6 @@ export function UrlInput(props: UrlInputProps) {
         /^https?:\/\/(www\.)?youtube\.com\/embed\//i,
       ];
       if (ytPatterns.some((p) => p.test(trimmed))) return 'youtube';
-      // TikTok patterns
       const ttPatterns = [
         /^https?:\/\/(www\.)?tiktok\.com\//i,
         /^https?:\/\/vm\.tiktok\.com\//i,
@@ -245,7 +252,6 @@ export function UrlInput(props: UrlInputProps) {
     if (!value) return;
     const platform = detectPlatform(value);
     if (platform && status === 'idle') {
-      // Auto-scan after short debounce (let user finish typing)
       const debounce = setTimeout(() => {
         onSubmit();
       }, 600);
@@ -262,12 +268,10 @@ export function UrlInput(props: UrlInputProps) {
       if (text) {
         onChange(text.trim());
         inputRef.current?.focus();
-        // Paste animation
         setIsPasteAnimating(true);
         setTimeout(() => setIsPasteAnimating(false), 600);
       }
     } catch {
-      // Clipboard permission denied — focus input so user can paste manually
       inputRef.current?.focus();
     }
   };
@@ -302,7 +306,7 @@ export function UrlInput(props: UrlInputProps) {
   };
 
   // ============================================
-  // Status-based styling
+  // Render
   // ============================================
   const statusClass = styles[`status--${status}`] ?? '';
   const showPlaceholder = !value && !isFocused;

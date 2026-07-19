@@ -5,7 +5,7 @@
 .form {
   position: relative;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: var(--space-3);
   width: 100%;
 }
@@ -14,6 +14,7 @@
   position: relative;
   display: flex;
   align-items: center;
+  flex: 1;
   background: var(--color-surface);
   border: 1.5px solid var(--color-border);
   border-radius: var(--radius-lg);
@@ -22,9 +23,10 @@
   overflow: hidden;
 }
 
+/* Clean focus state — no weird hover, just smooth border + subtle ring */
 .form:focus-within .inputWrap {
   border-color: var(--color-primary);
-  box-shadow: var(--shadow-focus);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
 .form.status--invalid .inputWrap {
@@ -32,7 +34,7 @@
 }
 
 .form.status--invalid:focus-within .inputWrap {
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
 }
 
 .form.status--valid .inputWrap {
@@ -52,6 +54,7 @@
   height: 56px;
   color: var(--color-text-tertiary);
   flex-shrink: 0;
+  transition: color var(--duration-fast) ease;
 }
 
 .form:focus-within .iconLeft {
@@ -72,6 +75,7 @@
   display: flex;
   align-items: center;
   min-height: 56px;
+  overflow: hidden;
 }
 
 .input {
@@ -207,6 +211,7 @@
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   animation: shake 0.4s ease;
+  flex-basis: 100%;
 }
 
 @keyframes shake {
@@ -239,6 +244,7 @@
   min-height: 20px;
   font-size: var(--font-size-xs);
   color: var(--color-text-tertiary);
+  flex-basis: 100%;
 }
 
 .pastedFlash {
@@ -258,27 +264,34 @@
 }
 
 /* ============================================
-   Responsive
+   Mobile Responsive — clean, compact layout
    ============================================ */
 @media (max-width: 640px) {
   .form {
-    gap: var(--space-2);
+    flex-direction: column;
+    gap: var(--space-3);
   }
 
   .inputWrap {
-    flex-direction: column;
-    align-items: stretch;
-    padding: 0;
-    height: auto;
+    flex: none;
+    width: 100%;
+    height: 52px;
+    border-radius: var(--radius-md);
   }
 
   .iconLeft {
-    display: none;
+    display: flex;
+    width: 44px;
+    height: 52px;
+  }
+
+  .iconLeft svg {
+    width: 18px;
+    height: 18px;
   }
 
   .inputInner {
-    width: 100%;
-    padding: 0 var(--space-4);
+    min-height: 52px;
   }
 
   .input {
@@ -292,16 +305,40 @@
 
   .clearBtn {
     margin-right: var(--space-2);
+    width: 28px;
+    height: 28px;
+  }
+
+  .clearBtn svg {
+    width: 14px;
+    height: 14px;
   }
 
   .pasteBtn {
-    margin-right: var(--space-3);
+    margin-right: var(--space-2);
+    padding: var(--space-2);
     font-size: var(--font-size-xs);
+    height: 32px;
+  }
+
+  .pasteBtn svg {
+    width: 14px;
+    height: 14px;
   }
 
   .submitBtn {
     width: 100%;
     height: 52px;
+    min-width: 0;
     border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+  }
+
+  .error {
+    flex-basis: auto;
+  }
+
+  .hint {
+    flex-basis: auto;
   }
 }
