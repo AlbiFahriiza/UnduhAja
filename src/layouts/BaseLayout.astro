@@ -36,7 +36,7 @@ const hreflangId = new URL(`/id${cleanPath}`, siteUrl).toString();
 const hreflangEn = new URL(`/en${cleanPath}`, siteUrl).toString();
 const hreflangDefault = siteUrl.toString();
 
-// Structured data
+// Structured data — Organization + WebSite (Google uses WebSite for site name)
 const orgSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
@@ -46,6 +46,24 @@ const orgSchema = {
   description: 'Modern video downloader for YouTube and TikTok. Made in Indonesia.',
   foundingDate: '2025',
   areaServed: 'ID',
+};
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'UnduhAja',
+  alternateName: 'UnduhAja — Download Video Tanpa Ribet',
+  url: siteUrl.toString(),
+  description: 'Modern video downloader for YouTube and TikTok. Made in Indonesia.',
+  inLanguage: lang === 'id' ? 'id-ID' : 'en-US',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: `${siteUrl.toString()}${lang}/?q={search_term_string}`,
+    },
+    'query-input': 'required name=search_term_string',
+  },
 };
 ---
 
@@ -116,7 +134,13 @@ const orgSchema = {
     />
 
     <!-- Structured data -->
+    <!-- Site name for Google search results -->
+    <meta name="application-name" content="UnduhAja" />
+    <meta name="apple-mobile-web-app-title" content="UnduhAja" />
+
+    <!-- Structured data: Organization + WebSite (Google uses WebSite for site name) -->
     <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
 
     <!-- Theme initialization (prevent FOUC) -->
     <script is:inline>
