@@ -6,7 +6,10 @@
  *   - Description renders HTML + markdown (URLs clickable, line breaks, hashtags)
  *   - Better metadata hierarchy
  *   - Smooth entrance animation
+ *   - Thumbnail blur-up loading
+ *   - TikTok external link fallback
  *   - Mobile-optimized vertical stack
+ *   - Scrollable info section on desktop
  */
 import { useEffect, useRef, useState, useMemo } from 'react';
 import {
@@ -14,6 +17,7 @@ import {
   Calendar,
   Clock,
   Eye,
+  ExternalLink,
   Music2,
   Play,
   User,
@@ -36,6 +40,7 @@ export interface VideoMetadata {
   uploadDate?: string;
   music?: string;
   embedUrl?: string;
+  sourceUrl?: string;
 }
 
 export interface VideoPreviewProps {
@@ -56,7 +61,7 @@ export interface VideoPreviewProps {
 }
 
 function formatViews(views: number | undefined, lang: 'id' | 'en', label: string): string {
-  if (!views) return '';
+  if (!views || views <= 0) return '';
   let formatted: string;
   if (lang === 'id') {
     if (views >= 1_000_000) formatted = `${(views / 1_000_000).toFixed(1).replace('.', ',')} jt`;
@@ -86,7 +91,9 @@ function formatDate(isoDate: string | undefined, lang: 'id' | 'en'): string {
 
 function formatDuration(duration: string | undefined): string {
   if (!duration) return '';
+  // Already in MM:SS or HH:MM:SS format from API
   if (/^\d+:\d+/.test(duration)) return duration;
+  // ISO 8601 (PT1H2M3S)
   const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
   if (!match) return duration;
   const [, h, m, s] = match;
@@ -100,7 +107,6 @@ function formatDuration(duration: string | undefined): string {
  * - Converts \n to <br>
  * - Converts URLs to clickable links
  * - Converts hashtags to styled spans
- * - Preserves existing HTML tags from YouTube/TikTok (after escaping, re-allow safe ones)
  */
 function renderDescription(desc: string): string {
   if (!desc) return '';
@@ -116,13 +122,13 @@ function renderDescription(desc: string): string {
   // Step 2: Convert URLs to clickable links
   html = html.replace(
     /(https?:\/\/[^\s<]+)/g,
-    '<a href="$1" target="_blank" rel="noopener noreferrer" class="$descLink">$1</a>'
+    '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
   );
 
   // Step 3: Convert hashtags to styled spans
   html = html.replace(
     /(^|\s)(#[\w]+)/g,
-    '$1<span class="$descHashtag">$2</span>'
+    '$1<span class="hashtag">$2</span>'
   );
 
   // Step 4: Convert line breaks
@@ -136,8 +142,8 @@ export function VideoPreview({ metadata, lang, labels }: VideoPreviewProps) {
   const cardRef = useRef<HTMLElement>(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [thumbLoaded, setThumbLoaded] = useState(false);
 
-  // Memoize rendered description HTML
   const renderedDesc = useMemo(() => renderDescription(metadata.description), [metadata.description]);
   const hasLongDesc = metadata.description && metadata.description.length > 150;
 
@@ -202,8 +208,10 @@ export function VideoPreview({ metadata, lang, labels }: VideoPreviewProps) {
             <img
               src={metadata.thumbnail}
               alt={metadata.title}
-              className={styles.thumbnail}
+              className={`${styles.thumbnail} ${thumbLoaded ? styles.thumbnailLoaded : styles.thumbnailLoading}`}
               loading="eager"
+              onLoad={() => setThumbLoaded(true)}
+              onError={() => setThumbLoaded(true)}
             />
             <span className={styles.playButton}>
               <Play size={28} fill="currentColor" />
@@ -212,6 +220,18 @@ export function VideoPreview({ metadata, lang, labels }: VideoPreviewProps) {
               <span className={styles.durationBadge}>
                 {formatDuration(metadata.duration)}
               </span>
+            )}
+            {isTikTok && metadata.sourceUrl && (
+              <a
+                href={metadata.sourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.tiktokFallback}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <ExternalLink size={12} />
+                <span>{lang === 'id' ? 'Buka di TikTok' : 'Open in TikTok'}</span>
+              </a>
             )}
           </button>
         )}
