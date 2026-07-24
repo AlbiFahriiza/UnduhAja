@@ -1,22 +1,18 @@
 /**
- * QualityDropdown — Custom dropdown (no native select).
+ * QualityDropdown — Simple custom dropdown (no native select).
  *
- * Features:
- *   - Tabs for Video / Audio
- *   - Video qualities: 1080p60 (default), 1080p, 720p60, 720p, 480p, 360p, 240p, 144p
- *   - Audio formats: MP3, M4A (source max bitrate)
- *   - Only show available qualities (filtered by metadata)
- *   - Spring-animated open/close (height + opacity)
- *   - Spring-animated item hover (translateX)
- *   - Full keyboard navigation (arrow up/down, enter, escape)
- *   - ARIA compliant: listbox, option, combobox roles
+ * Simplified UX:
+ *   - Single button trigger (shows current selection)
+ *   - Dropdown opens with Video/Audio tabs at top
+ *   - Quality list below tabs
+ *   - Click option → dropdown closes
  *
- * Disabled when no metadata available.
+ * Clean, minimal, easy to understand.
  */
 import { useEffect, useRef, useState } from 'react';
 import { Check, ChevronDown, Music2, Video } from 'lucide-react';
 import { useReducedMotion } from './hooks/useReducedMotion';
-import { SNAPPY_SPRING, BOUNCY_SPRING, springAtTime, springDuration } from '@/lib/spring';
+import { SNAPPY_SPRING, springAtTime, springDuration } from '@/lib/spring';
 import styles from './QualityDropdown.module.css';
 
 export type QualityTab = 'video' | 'audio';
@@ -72,7 +68,7 @@ export function QualityDropdown(props: QualityDropdownProps) {
   const [highlightedIndex, setHighlightedIndex] = useState(0);
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const listRef = useRef<HTMLUListElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const currentOptions = selectedTab === 'video' ? videoQualities : audioFormats;
@@ -133,13 +129,12 @@ export function QualityDropdown(props: QualityDropdownProps) {
       list.animate(keyframes, { duration, easing: 'linear', fill: 'forwards' });
     } else {
       list.style.pointerEvents = 'none';
-      const duration = 150;
       list.animate(
         [
           { opacity: 1, transform: 'translateY(0)', offset: 0 },
           { opacity: 0, transform: 'translateY(-4px)', offset: 1 },
         ],
-        { duration, easing: 'ease-out', fill: 'forwards' }
+        { duration: 120, easing: 'ease-out', fill: 'forwards' }
       );
     }
   }, [isOpen, reducedMotion]);
@@ -183,60 +178,40 @@ export function QualityDropdown(props: QualityDropdownProps) {
     buttonRef.current?.focus();
   };
 
+  const handleTabChange = (tab: QualityTab) => {
+    onTabChange(tab);
+    // Reset highlight to first option
+    const newOptions = tab === 'video' ? videoQualities : audioFormats;
+    const newAvailable = newOptions.filter((o) => o.available);
+    const newSelectedId = tab === 'video' ? selectedVideoId : selectedAudioId;
+    const selectedIndex = newAvailable.findIndex((o) => o.id === newSelectedId);
+    setHighlightedIndex(selectedIndex >= 0 ? selectedIndex : 0);
+  };
+
   return (
     <div
       ref={containerRef}
       className={`${styles.container} ${disabled ? styles.disabled : ''}`}
       onKeyDown={handleKeyDown}
     >
-      <label className={styles.label}>{labels.label}</label>
-
-      {/* Tabs */}
-      <div className={styles.tabs} role="tablist">
-        <button
-          type="button"
-          role="tab"
-          aria-selected={selectedTab === 'video'}
-          className={`${styles.tab} ${selectedTab === 'video' ? styles.tabActive : ''}`}
-          onClick={() => onTabChange('video')}
-          disabled={disabled}
-        >
-          <Video size={14} />
-          <span>{labels.video}</span>
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={selectedTab === 'audio'}
-          className={`${styles.tab} ${selectedTab === 'audio' ? styles.tabActive : ''}`}
-          onClick={() => onTabChange('audio')}
-          disabled={disabled}
-        >
-          <Music2 size={14} />
-          <span>{labels.audio}</span>
-        </button>
-      </div>
-
-      {/* Trigger button */}
+      {/* Single trigger button — shows current selection */}
       <button
         ref={buttonRef}
         type="button"
         role="combobox"
         aria-expanded={isOpen}
         aria-haspopup="listbox"
-        aria-label={labels.selectQuality}
+        aria-label={labels.label}
         className={styles.trigger}
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
       >
+        <span className={styles.triggerIcon}>
+          {selectedTab === 'video' ? <Video size={16} /> : <Music2 size={16} />}
+        </span>
         <span className={styles.triggerText}>
           {selectedOption ? (
-            <>
-              <span className={styles.triggerLabel}>{selectedOption.label}</span>
-              {selectedOption.id === defaultVideoId || selectedOption.id === defaultAudioId ? (
-                <span className={styles.defaultBadge}>{labels.default}</span>
-              ) : null}
-            </>
+            <span className={styles.triggerLabel}>{selectedOption.label}</span>
           ) : (
             <span className={styles.placeholder}>{labels.selectQuality}</span>
           )}
@@ -247,40 +222,66 @@ export function QualityDropdown(props: QualityDropdownProps) {
         />
       </button>
 
-      {/* Dropdown list */}
+      {/* Dropdown panel — tabs + options in one clean panel */}
       {isOpen && (
-        <ul
+        <div
           ref={listRef}
           role="listbox"
-          className={styles.list}
+          className={styles.panel}
           style={{ opacity: 0 }}
         >
-          {availableOptions.map((option, index) => {
-            const isSelected = option.id === currentSelectedId;
-            const isHighlighted = index === highlightedIndex;
-            return (
-              <li
-                key={option.id}
-                role="option"
-                aria-selected={isSelected}
-                className={`${styles.option} ${isSelected ? styles.optionSelected : ''} ${isHighlighted ? styles.optionHighlighted : ''}`}
-                onClick={() => handleSelect(option.id)}
-                onMouseEnter={() => setHighlightedIndex(index)}
-              >
-                <span className={styles.optionMain}>
+          {/* Tabs inside dropdown */}
+          <div className={styles.tabs} role="tablist">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={selectedTab === 'video'}
+              className={`${styles.tab} ${selectedTab === 'video' ? styles.tabActive : ''}`}
+              onClick={() => handleTabChange('video')}
+            >
+              <Video size={13} />
+              <span>{labels.video}</span>
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={selectedTab === 'audio'}
+              className={`${styles.tab} ${selectedTab === 'audio' ? styles.tabActive : ''}`}
+              onClick={() => handleTabChange('audio')}
+            >
+              <Music2 size={13} />
+              <span>{labels.audio}</span>
+            </button>
+          </div>
+
+          {/* Options list */}
+          <ul className={styles.list}>
+            {availableOptions.map((option, index) => {
+              const isSelected = option.id === currentSelectedId;
+              const isHighlighted = index === highlightedIndex;
+              const isDefault = option.id === defaultVideoId || option.id === defaultAudioId;
+              return (
+                <li
+                  key={option.id}
+                  role="option"
+                  aria-selected={isSelected}
+                  className={`${styles.option} ${isSelected ? styles.optionSelected : ''} ${isHighlighted ? styles.optionHighlighted : ''}`}
+                  onClick={() => handleSelect(option.id)}
+                  onMouseEnter={() => setHighlightedIndex(index)}
+                >
                   <span className={styles.optionLabel}>{option.label}</span>
                   {option.sublabel && (
                     <span className={styles.optionSublabel}>{option.sublabel}</span>
                   )}
-                </span>
-                {isSelected && <Check size={16} className={styles.checkIcon} />}
-                {(option.id === defaultVideoId || option.id === defaultAudioId) && (
-                  <span className={styles.optionDefault}>{labels.default}</span>
-                )}
-              </li>
-            );
-          })}
-        </ul>
+                  <div className={styles.optionRight}>
+                    {isDefault && <span className={styles.optionDefault}>{labels.default}</span>}
+                    {isSelected && <Check size={15} className={styles.checkIcon} />}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       )}
     </div>
   );

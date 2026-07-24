@@ -218,7 +218,7 @@ function DownloaderToolInner({ lang, translations }: DownloaderToolProps) {
 
     const metadata = toolStatus.metadata;
     // Filter available qualities based on metadata
-    const available = metadata.availableQualities ?? ['1080p60', '1080p', '720p', '480p', '360p'];
+    const available = metadata.availableQualities ?? ['1080p60', '1080', '720', '480', '360'];
     const newVideoQualities = getDefaultVideoQualities().map((q) => ({
       ...q,
       available: available.includes(q.id),
@@ -516,20 +516,20 @@ function DownloaderToolInner({ lang, translations }: DownloaderToolProps) {
 // ============================================
 function getDefaultVideoQualities(): QualityOption[] {
   return [
-    { id: '1080p60', label: '1080p60', sublabel: 'Full HD · 60fps', available: true },
-    { id: '1080p', label: '1080p', sublabel: 'Full HD', available: true },
-    { id: '720p60', label: '720p60', sublabel: 'HD · 60fps', available: true },
-    { id: '720p', label: '720p', sublabel: 'HD', available: true },
-    { id: '480p', label: '480p', sublabel: 'SD', available: true },
-    { id: '360p', label: '360p', available: true },
-    { id: '240p', label: '240p', available: true },
-    { id: '144p', label: '144p', available: true },
+    { id: '1080p60', label: '1080p', sublabel: '60 FPS · Full HD', available: true },
+    { id: '1080', label: '1080p', sublabel: '30 FPS · Full HD', available: true },
+    { id: '720p60', label: '720p', sublabel: '60 FPS · HD', available: true },
+    { id: '720', label: '720p', sublabel: '30 FPS · HD', available: true },
+    { id: '480', label: '480p', sublabel: '30 FPS · SD', available: true },
+    { id: '360', label: '360p', sublabel: '30 FPS', available: true },
+    { id: '240', label: '240p', sublabel: '30 FPS', available: true },
+    { id: '144', label: '144p', sublabel: '30 FPS', available: true },
   ];
 }
 
 function getDefaultAudioFormats(): QualityOption[] {
   return [
-    { id: 'mp3', label: 'MP3', sublabel: '320 kbps · source max', available: true },
+    { id: 'mp3', label: 'MP3', sublabel: '320 kbps', available: true },
     { id: 'm4a', label: 'M4A', sublabel: '256 kbps · AAC', available: true },
   ];
 }
